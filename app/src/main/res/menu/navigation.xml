@@ -5,21 +5,22 @@
     <item
         android:id="@+id/navigation_personalized"
         android:title="@string/title_personal"
-        app:showAsAction="always|withText" />
+        android:icon="@drawable/ic_navigation_personal"
+        />
 
     <item
         android:id="@+id/navigation_latest"
         android:title="@string/title_latest"
-        app:showAsAction="always|withText"/>
+        android:icon="@drawable/ic_navigation_latest"/>
 
     <item
         android:id="@+id/navigation_groups"
         android:title="@string/title_groups"
-        app:showAsAction="always|withText"/>
+        android:icon="@drawable/ic_navigation_groups"/>
 
     <item
         android:id="@+id/navigation_settings"
         android:title="@string/title_settings"
-        app:showAsAction="always|withText"/>
+        android:icon="@drawable/ic_navigation_settings"/>
 
 </menu>
