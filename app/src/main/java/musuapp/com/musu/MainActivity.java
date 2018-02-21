@@ -1,10 +1,12 @@
 package musuapp.com.musu;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
                     mTextMessage.setText(R.string.title_groups);
                     return true;
                 case R.id.navigation_settings:
-                    mTextMessage.setText(R.string.title_settings);
+                    Intent nextScreen = new Intent(getApplicationContext(), ScrollingActivity.class);
+                    startActivity(nextScreen);
                     return true;
             }
             return false;
