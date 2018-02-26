@@ -35,9 +35,11 @@ public class SettingsFragment extends Fragment {
         String serverName = "https://renrokusmall.herokuapp.com/API/API.php";
 
         try {
-            jsonTest.put("function", "musuTest");
+            jsonTest.put("function", "loginAttempt");
+            jsonTest.put("username", "Amuro");
+            jsonTest.put("password", "test");
 
-            Log.e("TEST", jsonTest.toString());
+            Log.e("TEST (JSON payload): ", jsonTest.toString());
 
             new MusuTest().execute(serverName, jsonTest.toString());
         } catch (JSONException e) {
@@ -88,7 +90,7 @@ public class SettingsFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.e("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
+            Log.e("TEST (JSON result): ", result); // this is expecting a response code to be sent from your server upon receiving the POST data
         }
     }
 }
