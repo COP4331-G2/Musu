@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity" android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".SignUpActivity" android:theme="@style/AppTheme.Dark" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

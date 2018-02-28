@@ -47,15 +47,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-      //  _signupLink.setOnClickListener(new View.OnClickListener() {
-//
-      //      @Override
-      //      public void onClick(View v) {
-      //          // Start the Signup activity
-      //          Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-      //          startActivityForResult(intent, REQUEST_SIGNUP);
-      //      }
-      //  });
+        _signupLink.setOnClickListener(new View.OnClickListener() {
+
+
+            public void onClick(View v) {
+                // Start the Signup activity
+                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivityForResult(intent, REQUEST_SIGNUP);
+            }
+        });
     }
 
     public void login() {
