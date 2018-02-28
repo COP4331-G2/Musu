@@ -29,10 +29,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Personal"));
-        tabLayout.addTab(tabLayout.newTab().setText("Latest"));
-        tabLayout.addTab(tabLayout.newTab().setText("Groups"));
-        tabLayout.addTab(tabLayout.newTab().setText("Settings"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_personal)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_latest)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_groups)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_settings)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);

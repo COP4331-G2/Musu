@@ -12,6 +12,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -72,14 +77,47 @@ public class LoginActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
+        final databaseConnection conn = new databaseConnection();
+
+        JSONObject jsonTest = new JSONObject();
+
+        String serverName = getString(R.string.api_url);
+
+        try {
+            jsonTest.put("function", "loginAttempt");
+            jsonTest.put("username", email);
+            jsonTest.put("password", password);
+
+            Log.e("TEST (JSON payload): ", jsonTest.toString());
+
+            conn.execute(serverName, jsonTest.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
+                        try {
+                            String connResult = conn.get();
+
+                            JSONObject connJSON = new JSONObject(connResult);
+
+                            Log.e("TEST (JSON result): ", connJSON.get("success").toString());
+
+                            if (connJSON.get("success").toString() == "true") {
+                                onLoginSuccess();
+                            } else {
+                                onLoginFailed();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+
                         progressDialog.dismiss();
                     }
                 }, 3000);
