@@ -96,31 +96,32 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        try {
-                            String connResult = conn.get();
+            new Runnable() {
+                public void run() {
+                    try {
+                        String connResult = conn.get();
 
-                            JSONObject connJSON = new JSONObject(connResult);
+                        JSONObject connJSON = new JSONObject(connResult);
 
-                            Log.e("TEST (JSON result): ", connJSON.get("success").toString());
+                        Log.e("TEST (JSON result): ", connJSON.get("success").toString());
 
-                            if (connJSON.get("success").toString() == "true") {
-                                onLoginSuccess();
-                            } else {
-                                onLoginFailed();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
+                        if (connJSON.get("success").toString() == "true") {
+                            onLoginSuccess();
+                        } else {
+                            onLoginFailed();
                         }
-
-                        progressDialog.dismiss();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
                     }
-                }, 3000);
+
+                    progressDialog.dismiss();
+                }
+            }, 2000
+        );
     }
 
 
