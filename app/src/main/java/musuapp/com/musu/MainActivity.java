@@ -1,6 +1,7 @@
 package musuapp.com.musu;
 
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void createNewPost(View view)
+    {
+        Intent intent = new Intent(this, CreateNewPost.class);
+        startActivity(intent);
+
     }
 
 //    @Override
