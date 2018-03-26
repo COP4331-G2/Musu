@@ -9,7 +9,7 @@
     <string name="title_settings">Settings</string>
 
     <!-- DATABASE CONNECTION -->
-    <string name="api_url">http://34.205.31.49/small/web/API/API.php</string>
+    <string name="api_url">http://34.205.31.49/large/web/API/API.php</string>
     <string name="new_post_caption">Add a caption</string>
     <string name="new_post_sample_tags">#basketball #party #students #UCF</string>
     <string name="new_post_submit_button">Post</string>

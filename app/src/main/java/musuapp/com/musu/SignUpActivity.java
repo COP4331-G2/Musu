@@ -34,16 +34,14 @@ public class SignUpActivity extends AppCompatActivity {
         {
             public void onClick(View v)
             {
-                String username = "";
+                String username;
                 username = _username.getText().toString();
                 String password = _password.getText().toString();
                 String email = _email.getText().toString();
 
                 final databaseConnection conn = new databaseConnection();
-
-                JSONObject jsonTest = new JSONObject();
-
                 String serverName = getString(R.string.api_url);
+                JSONObject jsonTest = new JSONObject();
 
                 try {
                     jsonTest.put("function", "createUser");
@@ -68,16 +66,12 @@ public class SignUpActivity extends AppCompatActivity {
 
                                 Log.e("TEST (JSON result): ", connJSON.get("success").toString());
 
-                                if (connJSON.get("success").toString() == "true") {
+                                if (connJSON.get("success").toString().equals("true")) {
                                     btn_signup.setText("signed up");
                                 } else {
                                     btn_signup.setText("failed");
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            } catch (ExecutionException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }

@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,13 +16,18 @@ import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int LOGIN_ACTIVITY_REQUEST_CODE = 0;
+    private static int currentUserID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        currentUserID = 0;
+
         Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -62,8 +68,26 @@ public class MainActivity extends AppCompatActivity {
     public void createNewPost(View view)
     {
         Intent intent = new Intent(this, CreateNewPost.class);
+        intent.putExtra("userID", MainActivity.currentUserID);
         startActivity(intent);
 
+    }
+
+    // This method is called when the second activity finishes
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // check that it is the LoginActivity with an OK result
+        if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                // get data from Intent
+                MainActivity.currentUserID = data.getIntExtra("userID", 0);
+
+                Log.e("currentUserID", String.valueOf(MainActivity.currentUserID));
+            }
+        }
     }
 
 //    @Override

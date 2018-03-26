@@ -120,6 +120,10 @@ public class CreateNewPost extends AppCompatActivity {
             public void onSuccess(String requestId, Map resultData) {
                 cloudinaryLink = resultData.get("url").toString();
                 progressBar.setProgress(100);
+
+                Intent intent = getIntent();
+                int userID = intent.getIntExtra("userID", 0);
+                // Add API call to store image and information
             }
             @Override
             public void onError(String requestId, ErrorInfo error) {
@@ -156,8 +160,11 @@ public class CreateNewPost extends AppCompatActivity {
                 //Create a Bitmap from the image filepath
                 Bitmap imageBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
+                int newHeight = (int) (imageBitmap.getHeight() * (512.0 / imageBitmap.getWidth()));
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(imageBitmap, 512, newHeight, true);
+
                 // Set the image view to the freshly created Bitmap
-                imageButton.setImageBitmap(imageBitmap);
+                imageButton.setImageBitmap(scaledBitmap);
             }
         }
         // If we requested an image from the gallery and we got one back
