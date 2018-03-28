@@ -1,5 +1,6 @@
 package musuapp.com.musu;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -41,7 +42,7 @@ public class CreateNewPost extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_post);
         File testFile = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        String testPath = testFile.getPath();
+        String testPath = testFile != null ? testFile.getPath() : null;
         Log.d("File path: ", testPath);
     }
 
@@ -49,7 +50,7 @@ public class CreateNewPost extends AppCompatActivity {
     private File createPhotoPath() throws IOException
     {
         // Create image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
@@ -167,9 +168,10 @@ public class CreateNewPost extends AppCompatActivity {
                 imageButton.setImageBitmap(scaledBitmap);
             }
         }
+        // TODO: This needs to be fixed because it always evaluates to FALSE according to Android Studio
         // If we requested an image from the gallery and we got one back
         // also if the data and getData are not null for safety
-        else if(requestCode == PICK_IMAGE_REGUEST && resultCode == RESULT_OK && data != null && data.getData() != null)
+        else if(requestCode == PICK_IMAGE_REGUEST && data != null && data.getData() != null)
         {
             // Create Uri object with the image path
             // The image path from the file choser is in the data.getData()
@@ -187,6 +189,4 @@ public class CreateNewPost extends AppCompatActivity {
             }
         }
     }
-
-
 }

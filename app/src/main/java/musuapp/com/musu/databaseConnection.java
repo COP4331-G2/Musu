@@ -14,7 +14,7 @@ class databaseConnection extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
 
-        String data = "";
+        StringBuilder data = new StringBuilder();
 
         HttpURLConnection httpURLConnection = null;
         try {
@@ -36,7 +36,7 @@ class databaseConnection extends AsyncTask<String, Void, String> {
             while (inputStreamData != -1) {
                 char current = (char) inputStreamData;
                 inputStreamData = inputStreamReader.read();
-                data += current;
+                data.append(current);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,12 +46,13 @@ class databaseConnection extends AsyncTask<String, Void, String> {
             }
         }
 
-        return data;
+        return data.toString();
     }
 
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        Log.e("TEST (JSON result): ", result); // this is expecting a response code to be sent from your server upon receiving the POST data
+        // this is expecting a response code to be sent from your server upon receiving the POST data
+        Log.e("TEST (JSON result): ", result);
     }
 }

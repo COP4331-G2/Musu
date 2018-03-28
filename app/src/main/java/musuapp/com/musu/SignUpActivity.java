@@ -1,24 +1,17 @@
 package musuapp.com.musu;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.concurrent.ExecutionException;
-
 public class SignUpActivity extends AppCompatActivity {
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -67,9 +60,9 @@ public class SignUpActivity extends AppCompatActivity {
                                 Log.e("TEST (JSON result): ", connJSON.get("success").toString());
 
                                 if (connJSON.get("success").toString().equals("true")) {
-                                    btn_signup.setText("signed up");
+                                    btn_signup.setText(getString(R.string.signup_success));
                                 } else {
-                                    btn_signup.setText("failed");
+                                    btn_signup.setText(getString(R.string.signup_failed));
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
