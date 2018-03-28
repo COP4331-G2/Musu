@@ -58,7 +58,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void login() {
+    public  void login()
+    {
+        onLoginSuccess();
+    }
+    public void dologin() {
         Log.d(TAG, "Login");
 
         if (!validate()) {

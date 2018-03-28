@@ -10,4 +10,5 @@
 
     <!-- DATABASE CONNECTION -->
     <string name="api_url">http://34.205.31.49/small/web/API/API.php</string>
+    <string name="test_image">https://res.cloudinary.com/dgz4xvj8r/image/upload/v1522094342/Users/xhwwcperw7nlsgquq40r.jpg</string>
 </resources>
