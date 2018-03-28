@@ -17,18 +17,21 @@ public class SignUpActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        final TextView _username = findViewById(R.id.input_Username);
-        final TextView _password = findViewById(R.id.input_Password);
-        final TextView _vPassword = findViewById(R.id.input_VerifyPassword);
-        final TextView _email =  findViewById(R.id.input_Email);
+        final TextView _firstname = findViewById(R.id.input_firstname);
+        final TextView _lastname = findViewById(R.id.input_lastname);
+        final TextView _username = findViewById(R.id.input_username);
+        final TextView _password = findViewById(R.id.input_password);
+        final TextView _verifyPassword = findViewById(R.id.input_verify_password);
+        final TextView _email =  findViewById(R.id.input_email);
         final Button btn_signup  = findViewById(R.id.btn_SignUp);
 
         btn_signup.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
-                String username;
-                username = _username.getText().toString();
+                String firstname = _firstname.getText().toString();
+                String lastname = _lastname.getText().toString();
+                String username = _username.getText().toString();
                 String password = _password.getText().toString();
                 String email = _email.getText().toString();
 
@@ -38,9 +41,11 @@ public class SignUpActivity extends AppCompatActivity {
 
                 try {
                     jsonTest.put("function", "createUser");
+                    jsonTest.put("firstName", firstname);
+                    jsonTest.put("lastName", lastname);
                     jsonTest.put("username", username);
                     jsonTest.put("password", password);
-//                    jsonTest.put("emailAddress", email);
+                    jsonTest.put("emailAddress", email);
 
                     Log.e("TEST (JSON payload): ", jsonTest.toString());
 
@@ -57,9 +62,12 @@ public class SignUpActivity extends AppCompatActivity {
 
                                 JSONObject connJSON = new JSONObject(connResult);
 
-                                Log.e("TEST (JSON result): ", connJSON.get("success").toString());
+                                String successResult = new String();
+                                successResult = connJSON.get("success").toString().trim();
 
-                                if (connJSON.get("success").toString().equals("true")) {
+                                Log.e("TEST (JSON result): ", successResult);
+
+                                if (successResult.equals("true")) {
                                     btn_signup.setText(getString(R.string.signup_success));
                                 } else {
                                     btn_signup.setText(getString(R.string.signup_failed));
