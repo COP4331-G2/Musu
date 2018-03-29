@@ -9,6 +9,15 @@
     <string name="title_settings">Settings</string>
 
     <!-- DATABASE CONNECTION -->
-    <string name="api_url">http://34.205.31.49/small/web/API/API.php</string>
     <string name="test_image">https://res.cloudinary.com/dgz4xvj8r/image/upload/v1522094342/Users/xhwwcperw7nlsgquq40r.jpg</string>
+    <string name="api_url">http://34.205.31.49/large/web/API/API.php</string>
+    <string name="new_post_caption">Add a caption</string>
+    <string name="new_post_sample_tags">#basketball #party #students #UCF</string>
+    <string name="new_post_submit_button">Post</string>
+    <string name="new_post_take_pic">Tap to take picture</string>
+    <string name="new_post_gallery_button">Choose Image from Gallery</string>
+
+    <!-- SIGN UP -->
+    <string name="signup_failed">Failed</string>
+    <string name="signup_success">Signed Up</string>
 </resources>

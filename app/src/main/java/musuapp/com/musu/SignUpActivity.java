@@ -1,55 +1,51 @@
 package musuapp.com.musu;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.concurrent.ExecutionException;
-
 public class SignUpActivity extends AppCompatActivity {
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        final TextView _username = findViewById(R.id.input_Username);
-        final TextView _password = findViewById(R.id.input_Password);
-        final TextView _vPassword = findViewById(R.id.input_VerifyPassword);
-        final TextView _email =  findViewById(R.id.input_Email);
+        final TextView _firstname = findViewById(R.id.input_firstname);
+        final TextView _lastname = findViewById(R.id.input_lastname);
+        final TextView _username = findViewById(R.id.input_username);
+        final TextView _password = findViewById(R.id.input_password);
+        final TextView _verifyPassword = findViewById(R.id.input_verify_password);
+        final TextView _email =  findViewById(R.id.input_email);
         final Button btn_signup  = findViewById(R.id.btn_SignUp);
 
         btn_signup.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
-                String username = "";
-                username = _username.getText().toString();
+                String firstname = _firstname.getText().toString();
+                String lastname = _lastname.getText().toString();
+                String username = _username.getText().toString();
                 String password = _password.getText().toString();
                 String email = _email.getText().toString();
 
                 final databaseConnection conn = new databaseConnection();
-
-                JSONObject jsonTest = new JSONObject();
-
                 String serverName = getString(R.string.api_url);
+                JSONObject jsonTest = new JSONObject();
 
                 try {
                     jsonTest.put("function", "createUser");
+                    jsonTest.put("firstName", firstname);
+                    jsonTest.put("lastName", lastname);
                     jsonTest.put("username", username);
                     jsonTest.put("password", password);
-//                    jsonTest.put("emailAddress", email);
+                    jsonTest.put("emailAddress", email);
 
                     Log.e("TEST (JSON payload): ", jsonTest.toString());
 
@@ -66,18 +62,17 @@ public class SignUpActivity extends AppCompatActivity {
 
                                 JSONObject connJSON = new JSONObject(connResult);
 
-                                Log.e("TEST (JSON result): ", connJSON.get("success").toString());
+                                String successResult = new String();
+                                successResult = connJSON.get("success").toString().trim();
 
-                                if (connJSON.get("success").toString() == "true") {
-                                    btn_signup.setText("signed up");
+                                Log.e("TEST (JSON result): ", successResult);
+
+                                if (successResult.equals("true")) {
+                                    btn_signup.setText(getString(R.string.signup_success));
                                 } else {
-                                    btn_signup.setText("failed");
+                                    btn_signup.setText(getString(R.string.signup_failed));
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            } catch (ExecutionException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }

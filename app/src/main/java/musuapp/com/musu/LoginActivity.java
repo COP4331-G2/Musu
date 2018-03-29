@@ -23,6 +23,9 @@ import butterknife.InjectView;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
+    private static JSONObject connJSON;
+
+    int currentUserID;
 
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
@@ -70,6 +73,8 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // This needs to be fixed
+        // Should re-enable upon failed login (timer?)
         _loginButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
@@ -105,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         String connResult = conn.get();
 
-                        JSONObject connJSON = new JSONObject(connResult);
+                        LoginActivity.connJSON = new JSONObject(connResult);
 
                         Log.e("TEST (JSON result): ", connJSON.get("success").toString());
 
@@ -114,11 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             onLoginFailed();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -147,8 +148,15 @@ public class LoginActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    public void onLoginSuccess() {
+    public void onLoginSuccess() throws JSONException {
         _loginButton.setEnabled(true);
+
+        Intent intent = new Intent();
+        currentUserID = (int) LoginActivity.connJSON.get("results");
+        intent.putExtra("userID", currentUserID);
+
+        setResult(RESULT_OK, intent);
+
         finish();
     }
 
