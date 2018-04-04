@@ -14,4 +14,11 @@
         android:text="Groups"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list_Post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
 </RelativeLayout>

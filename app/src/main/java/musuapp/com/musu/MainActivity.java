@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     public void createNewPost(View view)
     {
         Intent intent = new Intent(this, CreateNewPost.class);

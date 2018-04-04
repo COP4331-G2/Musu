@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                login();
+                dologin();
             }
         });
 
@@ -61,7 +61,18 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void login() {
+    public  void login()
+    {
+        try {
+            onLoginSuccess();
+
+        }
+        catch(Exception e)
+        {
+            Log.e("JSON", "JSON Error: "+e.toString());
+        }
+    }
+    public void dologin() {
         Log.d(TAG, "Login");
 
         if (!validate()) {
@@ -114,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                             onLoginSuccess();
                         } else {
                             onLoginFailed();
+                            //onLoginSuccess();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

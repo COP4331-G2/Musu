@@ -9,6 +9,7 @@
     <string name="title_settings">Settings</string>
 
     <!-- DATABASE CONNECTION -->
+    <string name="test_image">https://res.cloudinary.com/dgz4xvj8r/image/upload/v1522094342/Users/xhwwcperw7nlsgquq40r.jpg</string>
     <string name="api_url">http://www.musuapp.com/API/API.php</string>
     <string name="new_post_caption">Add a caption</string>
     <string name="new_post_sample_tags">#basketball #party #students #UCF</string>
