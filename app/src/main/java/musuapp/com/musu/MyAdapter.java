@@ -1,11 +1,14 @@
 package musuapp.com.musu;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.*;
 
 import java.util.List;
 
@@ -31,7 +34,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactViewHolder>
         ContactInfo ci = contactList.get(i);
         contactViewHolder.details.setText(ci.details);
         contactViewHolder.title.setText(ci.title);
-        contactViewHolder.img = ci.img;
+        Picasso.with(contactViewHolder.context).load(ci.imgUrl).into(contactViewHolder.img);
     }
 
     @Override
@@ -48,9 +51,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactViewHolder>
         protected TextView details;
         protected TextView title;
         protected ImageView img;
+        protected Context context;
 
         public ContactViewHolder(View v) {
             super(v);
+            context = v.getContext();
             details =  (TextView) v.findViewById(R.id.Details);
             title = (TextView) v.findViewById(R.id.title);
             img = (ImageView) v.findViewById(R.id.imageView2);

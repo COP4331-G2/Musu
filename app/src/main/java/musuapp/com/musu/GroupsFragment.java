@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import org.w3c.dom.Text;
 
@@ -42,9 +43,7 @@ public class GroupsFragment extends Fragment {
             ContactInfo ci = new ContactInfo();
             ci.title = "Doge" + i;
             ci.details = "so much wow,  so cool , omg " + i;
-            ci.img = inflatedView.findViewById(R.id.imageView2);
-            ci.setImage("https://res.cloudinary.com/dgz4xvj8r/image/upload/v1522094342/Users/xhwwcperw7nlsgquq40r.jpg");
-
+            ci.imgUrl  = getString(R.string.test_image);
             result.add(ci);
 
         }
