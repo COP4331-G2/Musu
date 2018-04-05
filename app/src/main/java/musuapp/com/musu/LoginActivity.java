@@ -160,8 +160,8 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
 
         Intent intent = new Intent();
-        currentUserID = (int) LoginActivity.connJSON.get("results");
-        intent.putExtra("userID", currentUserID);
+        JSONObject jsonResult = (JSONObject) LoginActivity.connJSON.get("results");
+        intent.putExtra("userID", (int) jsonResult.get("userID"));
 
         setResult(RESULT_OK, intent);
 

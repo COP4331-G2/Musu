@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -45,6 +46,7 @@
         </provider>
 
         <activity android:name=".CreateNewPost"
+            android:theme="@style/AppTheme.Light"
             android:parentActivityName=".MainActivity"></activity>
     </application>
 
