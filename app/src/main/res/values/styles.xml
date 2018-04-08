@@ -21,6 +21,7 @@
         <item name="colorControlActivated">@color/white</item>
         <item name="colorControlHighlight">@color/white</item>
         <item name="android:textColorHint">@color/iron</item>
+        <item name="android:textColor">@color/white</item>
 
         <item name="colorButtonNormal">@color/primary_darker</item>
         <item name="android:colorButtonNormal">@color/primary_darker</item>
@@ -37,16 +38,11 @@
     <item name="android:textColorPrimary">@color/white</item>
     <item name="android:textColorSecondary">@color/white</item>
     <item name="actionMenuTextColor">@color/white</item>
-
-
-
+    
     <item name="colorControlNormal">@color/iron</item>
     <item name="colorControlActivated">@color/white</item>
     <item name="colorControlHighlight">@color/white</item>
     <item name="android:textColorHint">@color/iron</item>
-
-
 </style>
-
 
 </resources>

@@ -1,6 +1,8 @@
 package musuapp.com.musu;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     @InjectView(R.id.input_password) EditText _passwordText;
     @InjectView(R.id.btn_login) Button _loginButton;
     @InjectView(R.id.link_signup) TextView _signupLink;
+    @InjectView(R.id.keep_login) CheckBox _keepMeLogin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,10 +42,12 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
 
+
         _loginButton  = findViewById(R.id.btn_login);
         _passwordText = findViewById(R.id.input_password);
         _emailText    = findViewById(R.id.input_email);
         _signupLink   = findViewById(R.id.link_signup);
+        _keepMeLogin  = findViewById(R.id.keep_login);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -159,6 +165,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() throws JSONException {
         _loginButton.setEnabled(true);
 
+        keepLogin();
+
         Intent intent = new Intent();
         JSONObject jsonResult = (JSONObject) LoginActivity.connJSON.get("results");
         intent.putExtra("userID", (int) jsonResult.get("userID"));
@@ -195,5 +203,18 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+
+    public void keepLogin(){
+        boolean checked = _keepMeLogin.isChecked();
+        if(checked) {
+            //
+
+            SharedPreferences access = getSharedPreferences("Login", MODE_PRIVATE);
+            SharedPreferences.Editor editor = access.edit();
+            editor.putString("email", _emailText.getText().toString());
+            editor.putString("password", _passwordText.getText().toString());
+            editor.commit();
+        }
     }
 }

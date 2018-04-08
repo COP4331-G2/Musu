@@ -3,9 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Musu.iml" filepath="$PROJECT_DIR$/Musu.iml" />
-      <module fileurl="file://C:\Users\Kevin Santana\Git\Musu_v4\Musu.iml" filepath="C:\Users\Kevin Santana\Git\Musu_v4\Musu.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Musu_v4.iml" filepath="$PROJECT_DIR$/Musu_v4.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
