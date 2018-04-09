@@ -13,9 +13,9 @@ import java.io.InputStream;
  * Created by Kevin Santana on 3/26/2018.
  */
 
-public class ContactInfo {
-    protected String title;
-    protected String details;
+public class Post {
+    protected String author;
+    protected String postDetail;
     protected String imgUrl;
 }
 
