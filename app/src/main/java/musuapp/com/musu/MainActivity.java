@@ -23,11 +23,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Intent splash = getIntent();
         currentUserID = 0;
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
+        if((MainActivity.currentUserID = splash.getIntExtra("userID", 0)) == -1) {
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
@@ -67,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreateNewPost.class);
         intent.putExtra("userID", MainActivity.currentUserID);
         startActivity(intent);
-
     }
 
     // This method is called when the second activity finishes

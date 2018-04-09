@@ -38,6 +38,15 @@
                 android:hint="Password"/>
         </android.support.design.widget.TextInputLayout>
 
+        <CheckBox
+            android:id="@+id/keep_login"
+            style="@android:style/Widget.DeviceDefault.CompoundButton.CheckBox"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_height="wrap_content"
+            android:text="Keep me log in" />
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_login"
             android:layout_width="fill_parent"
@@ -56,4 +65,5 @@
             android:textSize="16dip"/>
 
     </LinearLayout>
+
 </ScrollView>
