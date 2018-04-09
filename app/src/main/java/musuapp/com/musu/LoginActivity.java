@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
     private static JSONObject connJSON;
+    private int sessionUserID;
+    private String sessionUserName;
 
     int currentUserID;
 
@@ -128,6 +131,10 @@ public class LoginActivity extends AppCompatActivity {
                         Log.e("TEST (JSON result): ", connJSON.get("success").toString());
 
                         if (connJSON.get("success").toString() == "true") {
+                            JSONArray jsonArray = (JSONArray) connJSON.get("results");
+                            sessionUserID = (int) jsonArray.get(1);
+                            sessionUserName = (String) jsonArray.get(2);
+
                             onLoginSuccess();
                         } else {
                             onLoginFailed();
@@ -214,6 +221,8 @@ public class LoginActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = access.edit();
             editor.putString("email", _emailText.getText().toString());
             editor.putString("password", _passwordText.getText().toString());
+            editor.putInt("userID", sessionUserID);
+            editor.putString("userName", sessionUserName);
             editor.commit();
         }
     }
