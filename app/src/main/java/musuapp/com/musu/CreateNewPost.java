@@ -31,7 +31,7 @@ import java.util.Map;
 public class CreateNewPost extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int PICK_IMAGE_REGUEST = 1;
+    public static final int PICK_IMAGE = 2;
     String currentPhotoPath;
     String cloudinaryLink;
 
@@ -92,10 +92,16 @@ public class CreateNewPost extends AppCompatActivity {
 
     public void chosePicture(View view)
     {
-        Intent intent = new Intent();
-        intent.setType("iamge/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REGUEST);
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getIntent.setType("image/*");
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/*");
+
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+        startActivityForResult(pickIntent, PICK_IMAGE);
     }
 
     public void uploadImage(View view)
@@ -126,6 +132,7 @@ public class CreateNewPost extends AppCompatActivity {
                 Intent intent = getIntent();
                 int userID = intent.getIntExtra("userID", 0);
                 // Add API call to store image and information
+                createServerPost(cloudinaryLink);
             }
             @Override
             public void onError(String requestId, ErrorInfo error) {
@@ -135,7 +142,29 @@ public class CreateNewPost extends AppCompatActivity {
             public void onReschedule(String requestId, ErrorInfo error) {
                 // your code here
             }}).dispatch();
+
+        // Close Activity and return to MainActivity
+
+        // NOTE: The image and post upload will continue while this is happening
+        // Check for upload in Android Notifications? Maybe.
+
     }
+
+    private void createServerPost(String imageURL)
+    {
+        // Add connection to Volley
+
+        // Create JSON Payload
+
+        // Send JSON Payload
+
+        // Receive JSON Response
+
+        // On successfull post give Toast that the post was successful
+
+
+    }
+
 
     // Return function catching image from camera app
     // and file returned from media chooser
@@ -169,10 +198,10 @@ public class CreateNewPost extends AppCompatActivity {
                 imageButton.setImageBitmap(scaledBitmap);
             }
         }
-        // TODO: This needs to be fixed because it always evaluates to FALSE according to Android Studio
+
         // If we requested an image from the gallery and we got one back
         // also if the data and getData are not null for safety
-        else if(requestCode == PICK_IMAGE_REGUEST && data != null && data.getData() != null)
+        else if(requestCode == PICK_IMAGE && data != null && data.getData() != null)
         {
             // Create Uri object with the image path
             // The image path from the file choser is in the data.getData()
