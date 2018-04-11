@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +36,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactViewHolder>
         recyclerView.setAdapter(this);
 
     }
+    public void addPost(Post newPost)
+    {
+        this.postList.add(newPost);
+    }
     @Override
     public int getItemCount() {
         return postList.size();
@@ -45,6 +50,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactViewHolder>
         Post post = postList.get(i);
         contactViewHolder.postDetail.setText(post.postDetail);
         contactViewHolder.author.setText(post.author);
+        contactViewHolder.like.setChecked(false);
         Picasso.with(contactViewHolder.context).load(post.imgUrl).into(contactViewHolder.img);
     }
 
@@ -52,7 +58,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactViewHolder>
     public ContactViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View itemView = LayoutInflater.
                     from(viewGroup.getContext()).
-                    inflate(R.layout.contactrow, viewGroup, false);
+                    inflate(R.layout.personal_cardview, viewGroup, false);
 
             return new ContactViewHolder(itemView);
     }
@@ -63,13 +69,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactViewHolder>
         protected TextView author;
         protected ImageView img;
         protected Context context;
+        protected CheckBox like;
 
         public ContactViewHolder(View v) {
             super(v);
             context = v.getContext();
-            postDetail =  (TextView) v.findViewById(R.id.Details);
-            author = (TextView) v.findViewById(R.id.title);
-            img = (ImageView) v.findViewById(R.id.imageView2);
+            postDetail =  (TextView) v.findViewById(R.id.post_text);
+            author = (TextView) v.findViewById(R.id.user_name);
+            img = (ImageView) v.findViewById(R.id.post_pic);
+            like =  (CheckBox) v.findViewById(R.id.like);
+
         }
     }
 }

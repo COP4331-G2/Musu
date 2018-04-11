@@ -131,9 +131,9 @@ public class LoginActivity extends AppCompatActivity {
                         Log.e("TEST (JSON result): ", connJSON.get("success").toString());
 
                         if (connJSON.get("success").toString() == "true") {
-                            JSONArray jsonArray = (JSONArray) connJSON.get("results");
-                            sessionUserID = (int) jsonArray.get(1);
-                            sessionUserName = (String) jsonArray.get(2);
+                            JSONObject jsonArray = (JSONObject)  connJSON.get("results");
+                            sessionUserID = (int) jsonArray.get("userID");
+                            sessionUserName = (String) jsonArray.get("username");
 
                             onLoginSuccess();
                         } else {

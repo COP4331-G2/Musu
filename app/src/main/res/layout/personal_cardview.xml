@@ -98,6 +98,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="32dp"
             android:button="@drawable/like_design"
+            android:checked="false"
             android:foregroundGravity="center"
             android:text="Like"
             app:layout_constraintBottom_toTopOf="@+id/post_pic"

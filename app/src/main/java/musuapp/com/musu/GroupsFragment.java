@@ -25,6 +25,7 @@ public class GroupsFragment extends Fragment {
     RecyclerView.Adapter rva;
     RecyclerView.LayoutManager rvlm;
     SharedPreferences access;
+    MyAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class GroupsFragment extends Fragment {
 
         RecyclerView rv = inflatedView.findViewById(R.id.list_Post);
 
-        new MyAdapter(rv, getActivity(), createList(30));
+        adapter =  new MyAdapter(rv, getActivity(), createList(30));
 
         return this.inflatedView;
     }
