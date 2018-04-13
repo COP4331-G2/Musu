@@ -7,7 +7,8 @@ import java.util.ArrayList;
 public class Post {
     private String userName, bodyText, imageURL;
     private int postID, userID;
-    private ArrayList<String> tags;
+    private JSONArray tags;
+    private boolean isLiked;
 
     // Empty Constructor
     public Post()
@@ -45,16 +46,15 @@ public class Post {
     }
 
     // Constructor with everything
-    public Post(int postID, int userID, String bodyText, String imageURL, String userName, JSONArray tags)
+    public Post(int userID, int postID, String bodyText, String imageURL, String userName, JSONArray tags, boolean isLiked)
     {
-        this.postID = postID;
         this.userID = userID;
+        this.postID = postID;
         this.bodyText = bodyText;
         this.imageURL = imageURL;
-
         this.userName = userName;
-
-        // Add Handling for JSONArrays of Tags
+        this.tags = tags;
+        this.isLiked = isLiked;
     }
 
     // Get the Post ID

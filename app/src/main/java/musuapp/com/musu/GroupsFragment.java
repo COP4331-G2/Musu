@@ -55,9 +55,13 @@ public class GroupsFragment extends Fragment {
             String userName = jsonObject.getString("username");
             String bodyText = jsonObject.getString("bodyText");
             String imageURL = jsonObject.getString("imageURL");
+            int userID = jsonObject.getInt("userID");
+            int postID = jsonObject.getInt("postID");
+            JSONArray tags = jsonObject.getJSONArray("tags");
+            boolean isLiked = jsonObject.getBoolean("isLiked");
 
             // Add the data to a Post object
-            Post post = new Post(userName, bodyText, imageURL);
+            Post post = new Post(userID, postID, bodyText, imageURL, userName, tags, isLiked);
 
             // Return the Post object
             return post;
