@@ -12,10 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.view.MenuItem;
 
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
@@ -31,10 +31,9 @@ import java.util.Map;
 public class CreateNewPost extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int PICK_IMAGE_REGUEST = 1;
+    public static final int PICK_IMAGE = 2;
     String currentPhotoPath;
     String cloudinaryLink;
-    boolean pictureSelected = false;
 
 
 
@@ -93,90 +92,79 @@ public class CreateNewPost extends AppCompatActivity {
 
     public void chosePicture(View view)
     {
-        Intent intent = new Intent();
-        intent.setType("iamge/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REGUEST);
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getIntent.setType("image/*");
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/*");
+
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+        startActivityForResult(pickIntent, PICK_IMAGE);
     }
 
     public void uploadImage(View view)
     {
-        // Check if an image has actually been selected first
-        if(!pictureSelected)
-        {
-            // No picture has been taken or chosen from the gallery
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
 
-            // Print some error message about needing a picture / do nothing
-        }
-        else {
-            // An image has been taken or chosen from the gallery
-            // Proceed with an attempt to upload it
 
+        // Upload the image to the Cloudinary server
+        MediaManager.get().upload(currentPhotoPath).unsigned("musu_preset").constrain(TimeWindow.immediate()).callback(new UploadCallback() {
             ProgressBar progressBar = findViewById(R.id.progressBar);
-            progressBar.setVisibility(View.VISIBLE);
 
+            @Override
+            public void onStart(String requestId) {
+            }
+            @Override
+            public void onProgress(String requestId, long bytes, long totalBytes) {
+                // post progress to app UI (e.g. progress bar, notification)
+                double progress = (double) bytes/totalBytes;
+                int intProgress = (int) progress;
+                progressBar.setProgress(intProgress);
+            }
+            @Override
+            public void onSuccess(String requestId, Map resultData) {
+                cloudinaryLink = resultData.get("url").toString();
+                progressBar.setProgress(100);
 
-            // Upload the image to the Cloudinary server
-            MediaManager.get().upload(currentPhotoPath).unsigned("musu_preset").constrain(TimeWindow.immediate()).callback(new UploadCallback() {
-                ProgressBar progressBar = findViewById(R.id.progressBar);
+                Intent intent = getIntent();
+                int userID = intent.getIntExtra("userID", 0);
+                // Add API call to store image and information
+                createServerPost(cloudinaryLink);
+            }
+            @Override
+            public void onError(String requestId, ErrorInfo error) {
+                // your code here
+            }
+            @Override
+            public void onReschedule(String requestId, ErrorInfo error) {
+                // your code here
+            }}).dispatch();
 
-                @Override
-                public void onStart(String requestId) {
-                }
+        // Close Activity and return to MainActivity
 
-                @Override
-                public void onProgress(String requestId, long bytes, long totalBytes) {
-                    // post progress to app UI (e.g. progress bar, notification)
-                    double progress = (double) bytes / totalBytes;
-                    int intProgress = (int) progress;
-                    progressBar.setProgress(intProgress);
-                }
+        // NOTE: The image and post upload will continue while this is happening
+        // Check for upload in Android Notifications? Maybe.
 
-                @Override
-                public void onSuccess(String requestId, Map resultData) {
-
-                    // Store the resulting url in a String
-                    cloudinaryLink = resultData.get("url").toString();
-
-                    // Set progress bar to succeeded
-                    progressBar.setProgress(100);
-
-                    // Get usersID to create post for server API call
-                    Intent intent = getIntent();
-                    int userID = intent.getIntExtra("userID", 0);
-
-                    // Get text post body data to add to API call
-                    EditText postBodyView = findViewById(R.id.editText2);
-                    String postBody = postBodyView.getText().toString();
-
-                    // Get tags data, as an array,  to add to API call
-                    EditText postTagsView = findViewById(R.id.postTags);
-                    String postTags = postTagsView.toString();
-
-                    // Build JSON file to send to API
-                    //JSONObject createPostJSON = new JSONObject();
-                    //createPostJSON.add("function", "createPost");
-                    //createPostJSON.add("userID", userID);
-                    //createPostJSON.add("imageName", cloudinaryLink);
-                    //createPostJSON.add("postBody", postBody);
-                    //createPostJSON.add("postTags", postTags);
-
-                    // Add API call to store image and information
-                    //dbConn.execute(createPostJSON);
-                }
-
-                @Override
-                public void onError(String requestId, ErrorInfo error) {
-                    // Some message about error trying to Post your image
-                }
-
-                @Override
-                public void onReschedule(String requestId, ErrorInfo error) {
-                    // Nothing, because we use auto-rescheduling feature
-                }
-            }).dispatch();
-        }
     }
+
+    private void createServerPost(String imageURL)
+    {
+        // Add connection to Volley
+
+        // Create JSON Payload
+
+        // Send JSON Payload
+
+        // Receive JSON Response
+
+        // On successfull post give Toast that the post was successful
+
+
+    }
+
 
     // Return function catching image from camera app
     // and file returned from media chooser
@@ -208,15 +196,12 @@ public class CreateNewPost extends AppCompatActivity {
 
                 // Set the image view to the freshly created Bitmap
                 imageButton.setImageBitmap(scaledBitmap);
-
-                // Tell the app that a picture is ready for upload
-                pictureSelected = true;
             }
         }
-        // TODO: This needs to be fixed because it always evaluates to FALSE according to Android Studio
+
         // If we requested an image from the gallery and we got one back
         // also if the data and getData are not null for safety
-        else if(requestCode == PICK_IMAGE_REGUEST && data != null && data.getData() != null)
+        else if(requestCode == PICK_IMAGE && data != null && data.getData() != null)
         {
             // Create Uri object with the image path
             // The image path from the file choser is in the data.getData()
@@ -228,13 +213,26 @@ public class CreateNewPost extends AppCompatActivity {
 
                 // Set the imageView to the newly created Bitmap
                 imageButton.setImageBitmap(imageBitmap);
-
-                // Tell the app that a picture is ready for upload
-                pictureSelected = true;
             } catch (IOException e) {
                 // Error Handling
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * react to the user tapping the back/up icon in the action bar
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
+                // if this doesn't work as desired, another possibility is to call `finish()` here.
+                this.onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
