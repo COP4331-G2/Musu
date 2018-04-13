@@ -16,6 +16,7 @@ import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String apiURL = "http://www.musuapp.com/API/API.php";
     private static final int LOGIN_ACTIVITY_REQUEST_CODE = 0;
     private static int currentUserID;
 

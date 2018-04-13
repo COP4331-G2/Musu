@@ -48,10 +48,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactViewHolder>
     @Override
     public void onBindViewHolder(ContactViewHolder contactViewHolder, int i) {
         Post post = postList.get(i);
-        contactViewHolder.postDetail.setText(post.postDetail);
-        contactViewHolder.author.setText(post.author);
+        contactViewHolder.postDetail.setText(post.getBodyText());
+        contactViewHolder.author.setText(post.getUserName());
         contactViewHolder.like.setChecked(false);
-        Picasso.with(contactViewHolder.context).load(post.imgUrl).into(contactViewHolder.img);
+        Picasso.with(contactViewHolder.context).load(post.getImageURL()).into(contactViewHolder.img);
     }
 
     @Override

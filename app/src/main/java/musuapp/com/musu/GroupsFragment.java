@@ -3,23 +3,31 @@ package musuapp.com.musu;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-
-import org.w3c.dom.Text;
-
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class GroupsFragment extends Fragment {
 
+    public static final String apiURL = "http://www.musuapp.com/API/API.php";
+    public static final String TAG = GroupsFragment.class.getSimpleName();
     View inflatedView;
     RecyclerView rv;
     RecyclerView.Adapter rva;
@@ -28,73 +36,99 @@ public class GroupsFragment extends Fragment {
     MyAdapter adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
 
         this.inflatedView = inflater.inflate(R.layout.groups_fragment, container, false);
 
-        RecyclerView rv = inflatedView.findViewById(R.id.list_Post);
+        rv = inflatedView.findViewById(R.id.list_Post);
 
-        adapter =  new MyAdapter(rv, getActivity(), createList(30));
+        getPosts();
 
         return this.inflatedView;
     }
-       private List<Post> createList(int size) {
 
-        List<Post> result = new ArrayList<Post>();
-        for (int i=1; i <= size; i++) {
-            Post post = new Post();
-            post.author = "Doge" + i;
-            post.postDetail = "so much wow,  so cool , omg " + i;
-            post.imgUrl  = getString(R.string.test_image);
-            result.add(post);
+    private Post createPostObject(JSONObject jsonObject)
+    {
+        try {
+            // Set the data from the json object
+            String userName = jsonObject.getString("username");
+            String bodyText = jsonObject.getString("bodyText");
+            String imageURL = jsonObject.getString("imageURL");
 
+            // Add the data to a Post object
+            Post post = new Post(userName, bodyText, imageURL);
+
+            // Return the Post object
+            return post;
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        return result;
+        // In case of JSONException, return empty Post object
+        Post emptyPost = new Post();
+        return emptyPost;
     }
 
-    /**
-     * This function will populate the list as fast as it can, in the background
-     *
-    private void populateGroups()
-    {
-        SharedPreferences access = getSharedPreferences("Login", MODE_PRIVATE);
+    // Start the task, and in the callback, create the list and adapter
+    public void getPosts() {
 
-        int userID = access.get(userID);
+        // Build a map with the parameters I want to send to server
+        Map<String, String> postParam = new HashMap<String, String>();
+        postParam.put("function", "getPostsLatest");
+        postParam.put("numberOfPosts", "10");
+        postParam.put("userID", "3");
 
-        String url = API_LINK;
+        // JSON Object to send to the server
+        JSONObject parameters = new JSONObject(postParam);
 
-        JSONObject payload = new JSONObject();
-
-        try
-        {
-            payload.add("function","getPosts");
-            payload.add("numberOfPosts",30);
-            payload.add("userID", userID);
-        } catch (JSONException e){
-            Log.e("Groups Fragment: ", e.toString());
-        }
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Method.POST,
-                url, payload,
+        // Building the actual request
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiURL, parameters,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, response.toString());
-                        pDialog.hide();
+                        // Logic goes here
 
-                        // In here we add the items to the list
+
+                        try{
+                            // Declare objects
+                            List<Post> results = new ArrayList<Post>();
+                            JSONObject tempObject = new JSONObject();
+
+                            // Get the JSON Array with the Posts
+                            JSONArray jsonArray = response.getJSONArray("results");
+
+                            // Parse through the json array
+                            for(int i = 0;i < jsonArray.length(); i++)
+                            {
+                                // Get the JSON Object
+                                tempObject = jsonArray.getJSONObject(i);
+
+                                // Create a new Post Object
+                                Post post = createPostObject(tempObject);
+
+                                // Add the post to the list
+                                results.add(post);
+                            }
+
+                            // Create the adapter with the list
+                            adapter = new MyAdapter(rv, getActivity(), results);
+                        } catch (JSONException e){
+                            Log.e(TAG, e.toString());
+                        }
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                // hide the progress dialog
-                pDialog.hide();
+                // Print VolleyLog to the console
+                VolleyLog.e(TAG, "Error: " + error.getMessage());
             }
-        });
+        }); // !! The request building of "jsonObjReq" ends here !!
+
+        // Add the Request to the queue and execute
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "json_obj_req");
+
     }
-     */
 }
