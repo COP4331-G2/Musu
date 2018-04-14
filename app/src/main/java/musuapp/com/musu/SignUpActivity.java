@@ -22,7 +22,7 @@ public class SignUpActivity extends AppCompatActivity {
         final TextView _username = findViewById(R.id.input_username);
         final TextView _password = findViewById(R.id.input_password);
         final TextView _verifyPassword = findViewById(R.id.input_verify_password);
-        final TextView _email =  findViewById(R.id.input_email);
+        final TextView _email =  findViewById(R.id.input_username);
         final Button btn_signup  = findViewById(R.id.btn_SignUp);
 
         btn_signup.setOnClickListener(new View.OnClickListener()
