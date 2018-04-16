@@ -1,18 +1,36 @@
 package musuapp.com.musu;
 
+import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
+import android.app.AlertDialog;
+
+import com.android.volley.*;
+import com.android.volley.toolbox.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 import org.w3c.dom.Text;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,26 +39,45 @@ import static android.content.Context.MODE_PRIVATE;
 public class GroupsFragment extends Fragment {
 
     View inflatedView;
-    RecyclerView rv;
-    RecyclerView.Adapter rva;
-    RecyclerView.LayoutManager rvlm;
-    SharedPreferences access;
     MyAdapter adapter;
+
+    View overlay;
+    ImageView iv;
+    FloatingActionButton cPost;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         this.inflatedView = inflater.inflate(R.layout.groups_fragment, container, false);
 
-        RecyclerView rv = inflatedView.findViewById(R.id.list_Post);
+        final RecyclerView rv = inflatedView.findViewById(R.id.list_Post);
 
-        adapter =  new MyAdapter(rv, getActivity(), createList(30));
+        overlay = inflatedView.findViewById(R.id.overlay);
+        overlay.setVisibility(View.GONE);
+        cPost = getActivity().findViewById(R.id.floatingActionButton2);
+        cPost.setVisibility(overlay.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        iv = inflatedView.findViewById(R.id.imgOverlay_group);
+
+
+        adapter =  new MyAdapter(getContext(), rv, getActivity(), createList(30), cPost);
+
+        overlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecyclerView r = inflatedView.findViewById(R.id.list_Post);
+                r.setLayoutFrozen(false);
+                cPost.setVisibility(View.VISIBLE);
+                overlay.setVisibility(View.GONE);
+            }
+        });
 
         return this.inflatedView;
     }
+
        private List<Post> createList(int size) {
 
         List<Post> result = new ArrayList<Post>();
+
         for (int i=1; i <= size; i++) {
             Post post = new Post();
             post.author = "Doge" + i;

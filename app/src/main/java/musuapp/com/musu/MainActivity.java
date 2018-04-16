@@ -1,7 +1,9 @@
 package musuapp.com.musu;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int LOGIN_ACTIVITY_REQUEST_CODE = 0;
     private static int currentUserID;
+    FloatingActionButton cPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     public void createNewPost(View view)
     {
         Intent intent = new Intent(this, CreateNewPost.class);

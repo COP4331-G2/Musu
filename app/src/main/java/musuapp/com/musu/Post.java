@@ -17,5 +17,23 @@ public class Post {
     protected String author;
     protected String postDetail;
     protected String imgUrl;
+    protected String[] tags;
+    protected String authorPic;
+
+    public Post(String author, String postDetail, String imgUrl, String authorPic, String[] tags){
+        this.author = author;
+        this.postDetail = postDetail;
+        this.imgUrl = imgUrl;
+        this.authorPic = authorPic;
+        this.tags = tags;
+    }
+
+    public Post(String author, String postDetail, String imgUrl){
+        this.author = author;
+        this.postDetail = postDetail;
+        this.imgUrl = imgUrl;
+    }
+
+    public Post(){ }
 }
 
