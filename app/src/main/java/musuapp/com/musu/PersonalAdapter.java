@@ -50,6 +50,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
     {
         this.postList.add(newPost);
     }
+
     @Override
     public int getItemCount() {
         return postList.size();
@@ -60,19 +61,26 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         final Post post = postList.get(i);
         contactViewHolder.postDetail.setText(post.getBodyText());
         contactViewHolder.author.setText(post.getUserName());
-        contactViewHolder.like.setChecked(false);
+        contactViewHolder.like.setChecked(post.getIsLiked());
         Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
 
         contactViewHolder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* if(contactViewHolder.like.isChecked()){
-                    contactViewHolder.like.setChecked(false);
-                } else {contactViewHolder.like.setChecked(true);
-                }*/
-                Toast.makeText(context, "tap like button", Toast.LENGTH_SHORT).show();
+                if(contactViewHolder.like.isChecked() == true){
+                    // like button is now checked
+
+                    // api call to like post for user
+
+                } else {
+                    // like button is now unchecked
+
+                    // api call to dislike post for user
+
+                }
             }
         });
+
 
         contactViewHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override

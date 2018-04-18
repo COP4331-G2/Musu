@@ -87,6 +87,8 @@ public class Post {
         return this.userName;
     }
 
+    public boolean getIsLiked() { return this.isLiked; }
+
     public String toString()
     {
         String returnString = "Post ID: " + this.postID + ", User ID: " + this.userID + ", post text: " + this.bodyText + ", imageURL: " + this.imageURL;
