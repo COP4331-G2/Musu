@@ -129,7 +129,7 @@ public class GroupsFragment extends Fragment {
         // Build a map with the parameters I want to send to server
         Map<String, String> postParam = new HashMap<String, String>();
         postParam.put("function", "getPostsLatest");
-        postParam.put("numberOfPosts", "10");
+        postParam.put("numberOfPosts", "700");
         postParam.put("userID", "3");
 
         // JSON Object to send to the server
