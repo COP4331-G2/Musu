@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:id="@+id/relativeLayout2">
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_Postlatest"
         android:layout_width="0dp"
@@ -20,6 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/overlay_latest"

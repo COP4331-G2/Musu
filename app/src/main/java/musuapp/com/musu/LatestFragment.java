@@ -44,9 +44,9 @@ public class LatestFragment extends Fragment {
 
         for (int i=1; i <= size; i++) {
             Post post = new Post();
-            post.author = "Doge" + i;
+           /* post.author = "Doge" + i;
             post.postDetail = "so much wow,  so cool , omg " + i;
-            post.imgUrl  = getString(R.string.test_image);
+            post.imgUrl  = getString(R.string.test_image);*/
             result.add(post);
 
         }

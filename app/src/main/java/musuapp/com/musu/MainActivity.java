@@ -1,6 +1,10 @@
 package musuapp.com.musu;
 
+
 import android.content.Context;
+
+import android.content.SharedPreferences;
+
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -18,9 +22,14 @@ import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String apiURL = "http://www.musuapp.com/API/API.php";
     private static final int LOGIN_ACTIVITY_REQUEST_CODE = 0;
     private static int currentUserID;
+
     FloatingActionButton cPost;
+
+    SharedPreferences access;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +83,21 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreateNewPost.class);
         intent.putExtra("userID", MainActivity.currentUserID);
         startActivity(intent);
+    }
+
+    public void logout(View view)
+    {
+        access = getSharedPreferences("Login", MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = access.edit();
+        //editor.putString("username", "");
+        //editor.putString("password", "");
+        //editor.putInt("userID", -1);
+        editor.clear();
+        editor.apply();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
     }
 
     // This method is called when the second activity finishes

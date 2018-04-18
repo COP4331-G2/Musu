@@ -58,10 +58,10 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
     @Override
     public void onBindViewHolder(final ContactViewHolder contactViewHolder, int i) {
         final Post post = postList.get(i);
-        contactViewHolder.postDetail.setText(post.postDetail);
-        contactViewHolder.author.setText(post.author);
+        contactViewHolder.postDetail.setText(post.getBodyText());
+        contactViewHolder.author.setText(post.getUserName());
         contactViewHolder.like.setChecked(false);
-        Picasso.with(context).load(post.imgUrl).into(contactViewHolder.img);
+        Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
 
         contactViewHolder.like.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,13 +79,13 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
             public void onClick(View v) {
 
                 Intent intent = new Intent(fragment, DetailPostView.class);
-                intent.putExtra("author", post.author);
-                intent.putExtra("post_text", post.postDetail);
+                intent.putExtra("author", post.getUserName());
+                intent.putExtra("post_text", post.getBodyText());
                // Bitmap bit = ((BitmapDrawable)contactViewHolder.img.getDrawable()).getBitmap();
                 //ByteArrayOutputStream barray = new ByteArrayOutputStream();
                 //bit.compress(Bitmap.CompressFormat.PNG, 50, barray);
                 //intent.putExtra("post_image", barray.toByteArray());
-                intent.putExtra("post_image", post.imgUrl);
+                intent.putExtra("post_image", post.getImageURL());
                 fragment.startActivity(intent);
             }
         });

@@ -31,15 +31,15 @@ public class PersonalFragment extends Fragment {
         cPost = getActivity().findViewById(R.id.floatingActionButton2);
         cPost.setVisibility(overlay.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
         iv = inflatedView.findViewById(R.id.imgOverlaypersonal);
-
-        PersonalAdapter adapter = new PersonalAdapter(getContext(), rv, getActivity(), createList(30), cPost);
+        // implements these lines after volley code is implemented
+        /*PersonalAdapter adapter = new PersonalAdapter(getContext(), rv, getActivity(), createList(30), cPost);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(adapter);
+        rv.setAdapter(adapter);*/
 
         return this.inflatedView;
     }
 
-    private List<Post> createList(int size) {
+   /* private List<Post> createList(int size) {
 
         List<Post> result = new ArrayList<Post>();
 
@@ -53,5 +53,6 @@ public class PersonalFragment extends Fragment {
         }
 
         return result;
-    }
+    }*/
+
 }

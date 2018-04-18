@@ -57,19 +57,19 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
     @Override
     public void onBindViewHolder(final ContactViewHolder contactViewHolder, int i) {
         final Post post = postList.get(i);
-        contactViewHolder.postDetail.setText(post.postDetail);
-        contactViewHolder.author.setText(post.author);
+        contactViewHolder.postDetail.setText(post.getBodyText());
+        contactViewHolder.author.setText(post.getUserName());
         //contactViewHolder.like.setChecked(false);
-        Picasso.with(context).load(post.imgUrl).into(contactViewHolder.img);
+        Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
 
         contactViewHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(fragment, DetailPostView.class);
-                intent.putExtra("author", post.author);
-                intent.putExtra("post_text", post.postDetail);
-                intent.putExtra("post_image", post.imgUrl);
+                intent.putExtra("author", post.getUserName());
+                intent.putExtra("post_text", post.getBodyText());
+                intent.putExtra("post_image", post.getImageURL());
                 fragment.startActivity(intent);
             }
         });
@@ -78,7 +78,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
             @Override
             public boolean onLongClick(View v) {
 
-                fragment.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+                fragment.findViewById(R.id.overlay_group).setVisibility(View.VISIBLE);
                 ImageView imgOver = fragment.findViewById(R.id.imgOverlay_group);
                 imgOver.setImageDrawable(contactViewHolder.img.getDrawable());
                 recyclerView.setLayoutFrozen(true);

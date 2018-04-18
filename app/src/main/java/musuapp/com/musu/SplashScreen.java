@@ -28,7 +28,7 @@ public class SplashScreen extends AppCompatActivity {
     private static JSONObject connJSON;
     SharedPreferences access;
 
-    String email, password;
+    String username, password;
 
     int currentUserID;
 
@@ -42,10 +42,10 @@ public class SplashScreen extends AppCompatActivity {
         ButterKnife.inject(this);
 
         access = getSharedPreferences("Login", MODE_PRIVATE);
-        email = access.getString("email", "");
+        username = access.getString("username", "");
 
 
-                if(email.length() != 0){
+                if(!username.equals("")){
                     password = access.getString("password", "");
                     dologin();
                 }
@@ -78,7 +78,7 @@ public class SplashScreen extends AppCompatActivity {
 
         try {
             jsonTest.put("function", "loginAttempt");
-            jsonTest.put("username", email);
+            jsonTest.put("username", username);
             jsonTest.put("password", password);
 
             Log.e("TEST (JSON payload): ", jsonTest.toString());

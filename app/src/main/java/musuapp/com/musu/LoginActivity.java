@@ -1,7 +1,6 @@
 package musuapp.com.musu;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.concurrent.ExecutionException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -33,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
     int currentUserID;
 
-    @InjectView(R.id.input_email) EditText _emailText;
+    @InjectView(R.id.input_username) EditText _usernameText;
     @InjectView(R.id.input_password) EditText _passwordText;
     @InjectView(R.id.btn_login) Button _loginButton;
     @InjectView(R.id.link_signup) TextView _signupLink;
@@ -48,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton  = findViewById(R.id.btn_login);
         _passwordText = findViewById(R.id.input_password);
-        _emailText    = findViewById(R.id.input_email);
+        _usernameText    = findViewById(R.id.input_username);
         _signupLink   = findViewById(R.id.link_signup);
         _keepMeLogin  = findViewById(R.id.keep_login);
 
@@ -99,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        String email = _emailText.getText().toString();
+        String email = _usernameText.getText().toString();
         String password = _passwordText.getText().toString();
 
         final databaseConnection conn = new databaseConnection();
@@ -192,14 +188,11 @@ public class LoginActivity extends AppCompatActivity {
     public boolean validate() {
         boolean valid = true;
 
-        String email = _emailText.getText().toString();
+        String username = _usernameText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
-            valid = false;
-        } else {
-            _emailText.setError(null);
+        if (username.isEmpty()) {
+            _usernameText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
@@ -219,10 +212,9 @@ public class LoginActivity extends AppCompatActivity {
 
             SharedPreferences access = getSharedPreferences("Login", MODE_PRIVATE);
             SharedPreferences.Editor editor = access.edit();
-            editor.putString("email", _emailText.getText().toString());
+            editor.putString("username", _usernameText.getText().toString());
             editor.putString("password", _passwordText.getText().toString());
             editor.putInt("userID", sessionUserID);
-            editor.putString("userName", sessionUserName);
             editor.commit();
         }
     }
