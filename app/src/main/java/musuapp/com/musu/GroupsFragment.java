@@ -69,20 +69,19 @@ public class GroupsFragment extends Fragment {
 
         this.inflatedView = inflater.inflate(R.layout.groups_fragment, container, false);
         results = new ArrayList<Post>();
-        getPosts();
 
-        rv = inflatedView.findViewById(R.id.list_Post);
-
-        overlay = inflatedView.findViewById(R.id.overlay);
+        overlay = inflatedView.findViewById(R.id.overlay_group);
         overlay.setVisibility(View.GONE);
         cPost = getActivity().findViewById(R.id.floatingActionButton2);
         cPost.setVisibility(overlay.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
         iv = inflatedView.findViewById(R.id.imgOverlay_group);
 
-        //if (!results.isEmpty()){
-        //adapter = new GroupAdapter(getContext(), rv, getActivity(), results, cPost );
-        //rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //rv.setAdapter(adapter);}
+        rv = inflatedView.findViewById(R.id.list_Post);
+        adapter = new GroupAdapter(getContext(), rv, getActivity(), results, cPost );
+        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv.setAdapter(adapter);
+
+        getPosts();
 
         overlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,13 +168,13 @@ public class GroupsFragment extends Fragment {
                             // Create the adapter with the list
                             //adapter = new MyAdapter(rv, getActivity(), results);
 
-                            adapter = new GroupAdapter(getContext(), rv, getActivity(), results, cPost );
-                            rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-                            rv.setAdapter(adapter);
+
                         } catch (JSONException e){
                             Log.e(TAG, e.toString());
                         }
+                       adapter.notifyDataSetChanged();
                     }
+
                 }, new Response.ErrorListener() {
 
             @Override

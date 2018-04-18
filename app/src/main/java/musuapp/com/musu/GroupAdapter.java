@@ -34,7 +34,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
         this.context = context;
         this.fragment = fragment;
         this.cPost = cPost;
-        //this.recyclerView = recyclerView;
+        this.recyclerView = recyclerView;
 
         /*RecyclerView.LayoutManager rvlm;
         rvlm = new LinearLayoutManager(fragment);
