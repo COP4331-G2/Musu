@@ -73,7 +73,7 @@ public class GroupsFragment extends Fragment {
 
         rv = inflatedView.findViewById(R.id.list_Post);
 
-        overlay = inflatedView.findViewById(R.id.overlay);
+        overlay = inflatedView.findViewById(R.id.overlay_group);
         overlay.setVisibility(View.GONE);
         cPost = getActivity().findViewById(R.id.floatingActionButton2);
         cPost.setVisibility(overlay.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
@@ -130,7 +130,7 @@ public class GroupsFragment extends Fragment {
         // Build a map with the parameters I want to send to server
         Map<String, String> postParam = new HashMap<String, String>();
         postParam.put("function", "getPostsLatest");
-        postParam.put("numberOfPosts", "10");
+        postParam.put("numberOfPosts", "700");
         postParam.put("userID", "3");
 
         // JSON Object to send to the server
