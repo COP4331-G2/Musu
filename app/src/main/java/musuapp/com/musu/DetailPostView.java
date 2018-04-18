@@ -1,9 +1,5 @@
 package musuapp.com.musu;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -18,10 +14,10 @@ import butterknife.InjectView;
 
 public class DetailPostView extends AppCompatActivity {
 
-    @InjectView(R.id.username) TextView author;
+    @InjectView(R.id.groupname) TextView author;
     @InjectView(R.id.like) CheckBox likeBtn;
     @InjectView(R.id.post_img) ImageView postImg;
-    @InjectView(R.id.post_text) TextView postText;
+    @InjectView(R.id.group_text) TextView postText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +28,10 @@ public class DetailPostView extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        author   = findViewById(R.id.username);
+        author   = findViewById(R.id.groupname);
         likeBtn  = findViewById(R.id.like);
         postImg  = findViewById(R.id.post_img);
-        postText = findViewById(R.id.post_text);
+        postText = findViewById(R.id.group_text);
 
         author.setText(bundle.getString("author"));
         postText.setText(bundle.getString("post_text"));

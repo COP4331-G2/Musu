@@ -39,7 +39,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class GroupsFragment extends Fragment {
 
     View inflatedView;
-    MyAdapter adapter;
+    //MyAdapter adapter;
 
     View overlay;
     ImageView iv;
@@ -58,8 +58,9 @@ public class GroupsFragment extends Fragment {
         cPost.setVisibility(overlay.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
         iv = inflatedView.findViewById(R.id.imgOverlay_group);
 
-
-        adapter =  new MyAdapter(getContext(), rv, getActivity(), createList(30), cPost);
+        GroupAdapter adapter = new GroupAdapter(getContext(), rv, getActivity(), createList(30), cPost );
+        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv.setAdapter(adapter);
 
         overlay.setOnClickListener(new View.OnClickListener() {
             @Override
