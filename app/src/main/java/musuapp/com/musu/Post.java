@@ -89,6 +89,8 @@ public class Post {
 
     public boolean getIsLiked() { return this.isLiked; }
 
+    public JSONArray getTags() {return this.tags; }
+
     public String toString()
     {
         String returnString = "Post ID: " + this.postID + ", User ID: " + this.userID + ", post text: " + this.bodyText + ", imageURL: " + this.imageURL;

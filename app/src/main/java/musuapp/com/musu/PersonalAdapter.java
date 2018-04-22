@@ -6,16 +6,23 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.*;
 
+import org.json.JSONException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,7 +69,34 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         contactViewHolder.postDetail.setText(post.getBodyText());
         contactViewHolder.author.setText(post.getUserName());
         contactViewHolder.like.setChecked(post.getIsLiked());
-        Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
+        Picasso.with(context).load(post.getImageURL()).fit().into(contactViewHolder.img);
+
+        ArrayList<TextView> pTags = new ArrayList<TextView>();
+        int len = post.getTags().length();
+        int j = 0;
+        String s = "";
+       // while ( )
+        try{
+            Log.i("TAG", post.getTags().get(0).toString());
+
+            while( len > 0 && j < len && j < 10){
+                s = post.getTags().get(j).toString();
+                TextView temp = new TextView(context);
+                temp.setText(s);
+                temp.setBackgroundResource(R.drawable.tag_view);
+                pTags.add(temp);
+                contactViewHolder.tagArea.addView(temp);
+                j++;
+            }
+
+            //final ArrayAdapter<TextView> gvAdapter = new ArrayAdapter<TextView>(context, android.R.layout.simple_list_item_1, pTags);
+            //contactViewHolder.tagArea.setAdapter(gvAdapter);
+
+        }catch (JSONException e){
+            Log.e("TAG", e.toString());
+        }
+
+
 
         contactViewHolder.like.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +148,13 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
     }
 
+    public ArrayAdapter showSomeTags(){
+
+        final List<TextView> personalTags = new ArrayList<>();
+
+        return null;
+    }
+
 
     @Override
     public ContactViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -131,6 +172,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         protected ImageView img;
         protected CheckBox like;
         protected CardView card;
+        protected GridLayout tagArea;
 
         public ContactViewHolder(View v) {
             super(v);
@@ -140,6 +182,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
             img = (ImageView) v.findViewById(R.id.personal_pic);
             like =  (CheckBox) v.findViewById(R.id.like);
             card = (CardView) v.findViewById(R.id.personal_card);
+            tagArea = (GridLayout) v.findViewById(R.id.tag_area);
 
         }
 
