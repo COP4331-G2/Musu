@@ -1,13 +1,38 @@
 package musuapp.com.musu;
 
+import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.support.v7.widget.LinearLayoutManager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import android.widget.ImageView;
+import android.widget.Toast;
+import android.app.AlertDialog;
+
+import com.android.volley.*;
+import com.android.volley.toolbox.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+import org.w3c.dom.Text;
+
+import java.net.URL;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -16,6 +41,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,24 +55,47 @@ public class GroupsFragment extends Fragment {
     public static final String apiURL = "http://www.musuapp.com/API/API.php";
     public static final String TAG = GroupsFragment.class.getSimpleName();
     View inflatedView;
+    GroupAdapter adapter;
     RecyclerView rv;
-    RecyclerView.Adapter rva;
-    RecyclerView.LayoutManager rvlm;
-    SharedPreferences access;
-    MyAdapter adapter;
+    View overlay;
+    ImageView iv;
+    FloatingActionButton cPost;
+
+    List<Post> results;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
         this.inflatedView = inflater.inflate(R.layout.groups_fragment, container, false);
+        results = new ArrayList<Post>();
+
+        overlay = inflatedView.findViewById(R.id.overlay_group);
+        overlay.setVisibility(View.GONE);
+        cPost = getActivity().findViewById(R.id.floatingActionButton2);
+        cPost.setVisibility(overlay.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        iv = inflatedView.findViewById(R.id.imgOverlay_group);
 
         rv = inflatedView.findViewById(R.id.list_Post);
+        adapter = new GroupAdapter(getContext(), rv, getActivity(), results, cPost );
+        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv.setAdapter(adapter);
 
         getPosts();
 
+        overlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecyclerView r = inflatedView.findViewById(R.id.list_Post);
+                r.setLayoutFrozen(false);
+                cPost.setVisibility(View.VISIBLE);
+                overlay.setVisibility(View.GONE);
+            }
+        });
+
         return this.inflatedView;
     }
+
 
     private Post createPostObject(JSONObject jsonObject)
     {
@@ -80,7 +129,7 @@ public class GroupsFragment extends Fragment {
         // Build a map with the parameters I want to send to server
         Map<String, String> postParam = new HashMap<String, String>();
         postParam.put("function", "getPostsLatest");
-        postParam.put("numberOfPosts", "10");
+        postParam.put("numberOfPosts", "700");
         postParam.put("userID", "3");
 
         // JSON Object to send to the server
@@ -97,7 +146,7 @@ public class GroupsFragment extends Fragment {
 
                         try{
                             // Declare objects
-                            List<Post> results = new ArrayList<Post>();
+                            //List<Post> results = new ArrayList<Post>();
                             JSONObject tempObject = new JSONObject();
 
                             // Get the JSON Array with the Posts
@@ -117,11 +166,15 @@ public class GroupsFragment extends Fragment {
                             }
 
                             // Create the adapter with the list
-                            adapter = new MyAdapter(rv, getActivity(), results);
+                            //adapter = new MyAdapter(rv, getActivity(), results);
+
+
                         } catch (JSONException e){
                             Log.e(TAG, e.toString());
                         }
+                       adapter.notifyDataSetChanged();
                     }
+
                 }, new Response.ErrorListener() {
 
             @Override

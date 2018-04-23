@@ -1,14 +1,13 @@
 package musuapp.com.musu.utils;
 
-/**
- * Created by david on 4/13/2018.
- */
-
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader;
 
+/**
+ * Created by david on 4/16/2018.
+ */
 public class LruBitmapCache extends LruCache<String, Bitmap> implements ImageLoader.ImageCache {
 
     public static int getDefaultLruCacheSize() {

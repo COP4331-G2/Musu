@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * Provide views to RecyclerView with data from mDataSet.
- */
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactViewHolder> {
 
     private List<Post> postList;
@@ -82,3 +82,4 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactViewHolder>
         }
     }
 }
+*/

@@ -5,6 +5,9 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 public class Post {
+
+
+
     private String userName, bodyText, imageURL;
     private int postID, userID;
     private JSONArray tags;
@@ -41,7 +44,6 @@ public class Post {
         this.userID = userID;
         this.bodyText = bodyText;
         this.imageURL = imageURL;
-
         this.userName = userName;
     }
 
@@ -84,6 +86,10 @@ public class Post {
     {
         return this.userName;
     }
+
+    public boolean getIsLiked() { return this.isLiked; }
+
+    public JSONArray getTags() {return this.tags; }
 
     public String toString()
     {

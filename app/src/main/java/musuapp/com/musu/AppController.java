@@ -1,8 +1,6 @@
 package musuapp.com.musu;
 
 import android.app.Application;
-
-import android.app.Application;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -10,13 +8,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.cloudinary.android.MediaManager;
-import musuapp.com.musu.utils.LruBitmapCache;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AppController extends Application {
+import musuapp.com.musu.utils.LruBitmapCache;
 
+/**
+ * Created by david on 4/16/2018.
+ */
+
+public class AppController extends Application {
     public static final String TAG = AppController.class.getSimpleName();
 
     private RequestQueue mRequestQueue;
@@ -72,4 +74,3 @@ public class AppController extends Application {
         }
     }
 }
-
