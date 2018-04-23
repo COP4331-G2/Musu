@@ -1,5 +1,7 @@
 package musuapp.com.musu;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -17,6 +19,22 @@ public class Post {
     public Post()
     {
         // Empty call
+    }
+
+    public void setLiked(String responseText)
+    {
+        if(responseText.equals("Post liked."))
+        {
+            this.isLiked = true;
+        }
+        else if(responseText.equals("Post unliked."))
+        {
+            this.isLiked = false;
+        }
+        else
+        {
+            Log.e("Posts","response not recorded");
+        }
     }
 
     public Post(String userName, String bodyText, String imageURL)

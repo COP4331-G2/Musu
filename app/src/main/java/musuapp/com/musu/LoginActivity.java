@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
     int currentUserID;
 
-    @InjectView(R.id.input_username) EditText _usernameText;
+    @InjectView(R.id.input_email) EditText _usernameText;
     @InjectView(R.id.input_password) EditText _passwordText;
     @InjectView(R.id.btn_login) Button _loginButton;
     @InjectView(R.id.link_signup) TextView _signupLink;
@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton  = findViewById(R.id.btn_login);
         _passwordText = findViewById(R.id.input_password);
-        _usernameText    = findViewById(R.id.input_username);
+        _usernameText    = findViewById(R.id.input_email);
         _signupLink   = findViewById(R.id.link_signup);
         _keepMeLogin  = findViewById(R.id.keep_login);
 
