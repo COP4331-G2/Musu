@@ -28,7 +28,9 @@ public class SplashScreen extends AppCompatActivity {
     private static JSONObject connJSON;
     SharedPreferences access;
 
-    String username, password;
+    String username, token;
+    private int userID;
+    private boolean stayLogin;
 
     int currentUserID;
 
@@ -42,14 +44,19 @@ public class SplashScreen extends AppCompatActivity {
         ButterKnife.inject(this);
 
         access = getSharedPreferences("Login", MODE_PRIVATE);
-        username = access.getString("username", "");
+        stayLogin = access.getBoolean("stayLogin", false);
+        userID = access.getInt("userID", -1);
 
 
-                if(!username.equals("")){
-                    password = access.getString("password", "");
+                if(stayLogin == true){
+                    token = access.getString("token", "");
+                    if(userID == -1){Log.e("SplashScreen user Id", "UserID == -1"); }
                     dologin();
                 }
                 else{
+                    SharedPreferences.Editor editor = access.edit();
+                    editor.clear();
+                    editor.commit();
                     onLoginFailed();
                 }
 
@@ -77,9 +84,9 @@ public class SplashScreen extends AppCompatActivity {
         String serverName = getString(R.string.api_url);
 
         try {
-            jsonTest.put("function", "loginAttempt");
-            jsonTest.put("username", username);
-            jsonTest.put("password", password);
+            jsonTest.put("function", "loginWithToken");
+            jsonTest.put("token", token);
+            jsonTest.put("userID", userID);
 
             Log.e("TEST (JSON payload): ", jsonTest.toString());
 
@@ -128,7 +135,10 @@ public class SplashScreen extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         try {
+                            if(stayLogin == true){
+                            Toast.makeText(SplashScreen.this, "Session expired", Toast.LENGTH_SHORT).show();}
                             goToMain(-1);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

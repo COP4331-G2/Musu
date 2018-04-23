@@ -1,5 +1,6 @@
 package musuapp.com.musu;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,6 +36,9 @@ public class SignUpActivity extends AppCompatActivity {
                 String password = _password.getText().toString();
                 String email = _email.getText().toString();
 
+                SharedPreferences access = getSharedPreferences("Login", MODE_PRIVATE);
+                String token = access.getString("token", "");
+
                 final databaseConnection conn = new databaseConnection();
                 String serverName = getString(R.string.api_url);
                 JSONObject jsonTest = new JSONObject();
@@ -46,6 +50,7 @@ public class SignUpActivity extends AppCompatActivity {
                     jsonTest.put("username", username);
                     jsonTest.put("password", password);
                     jsonTest.put("emailAddress", email);
+                    jsonTest.put("token", token);
 
                     Log.e("TEST (JSON payload): ", jsonTest.toString());
 

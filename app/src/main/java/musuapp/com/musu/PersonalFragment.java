@@ -1,5 +1,7 @@
 package musuapp.com.musu;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -35,9 +37,12 @@ public class PersonalFragment extends Fragment {
     FloatingActionButton cPost;
     List<Post> results;
     PersonalAdapter adapter;
+    SharedPreferences access;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        access = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
 
         results = new ArrayList<Post>();
 
@@ -101,11 +106,15 @@ public class PersonalFragment extends Fragment {
     // Start the task, and in the callback, create the list and adapter
     public void getPosts() {
 
+        String token = access.getString("token", "");
+        Integer userID = access.getInt("userID", -1);
+
         // Build a map with the parameters I want to send to server
         Map<String, String> postParam = new HashMap<String, String>();
         postParam.put("function", "getPostsPersonal");
         postParam.put("numberOfPosts", "50");
-        postParam.put("userID", "1");
+        postParam.put("userID", userID.toString());
+        postParam.put("token", token);
 
         // JSON Object to send to the server
         JSONObject parameters = new JSONObject(postParam);

@@ -1,6 +1,7 @@
 package musuapp.com.musu;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -60,12 +61,15 @@ public class GroupsFragment extends Fragment {
     View overlay;
     ImageView iv;
     FloatingActionButton cPost;
+    SharedPreferences access;
 
     List<Post> results;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+
+        access = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
 
         this.inflatedView = inflater.inflate(R.layout.groups_fragment, container, false);
         results = new ArrayList<Post>();
@@ -126,11 +130,15 @@ public class GroupsFragment extends Fragment {
     // Start the task, and in the callback, create the list and adapter
     public void getPosts() {
 
+        String token = access.getString("token", "");
+        Integer userID = access.getInt("userID", -1);
+
         // Build a map with the parameters I want to send to server
         Map<String, String> postParam = new HashMap<String, String>();
-        postParam.put("function", "getPostsLatest");
-        postParam.put("numberOfPosts", "700");
-        postParam.put("userID", "3");
+        postParam.put("function", "getPostsGroups");
+        postParam.put("numberOfPosts", "50");
+        postParam.put("userID", userID.toString());
+        postParam.put("token", token);
 
         // JSON Object to send to the server
         JSONObject parameters = new JSONObject(postParam);

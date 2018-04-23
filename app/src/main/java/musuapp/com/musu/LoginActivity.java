@@ -26,6 +26,9 @@ public class LoginActivity extends AppCompatActivity {
     private static JSONObject connJSON;
     private int sessionUserID;
     private String sessionUserName;
+    private String sessionToken;
+    private SharedPreferences access;
+    private SharedPreferences.Editor editor;
 
     int currentUserID;
 
@@ -105,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         String serverName = getString(R.string.api_url);
 
         try {
-            jsonTest.put("function", "loginAttempt");
+            jsonTest.put("function", "loginWithUsername");
             jsonTest.put("username", email);
             jsonTest.put("password", password);
 
@@ -128,8 +131,9 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (connJSON.get("success").toString() == "true") {
                             JSONObject jsonArray = (JSONObject)  connJSON.get("results");
-                            sessionUserID = (int) jsonArray.get("userID");
-                            sessionUserName = (String) jsonArray.get("username");
+                            sessionUserID = jsonArray.getInt("userID");
+                            sessionUserName = jsonArray.getString("username");
+                            sessionToken = jsonArray.getString("token");
 
                             onLoginSuccess();
                         } else {
@@ -167,6 +171,12 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() throws JSONException {
         _loginButton.setEnabled(true);
+
+        access = getSharedPreferences("Login", MODE_PRIVATE);
+        editor = access.edit();
+        editor.putInt("userID", sessionUserID);
+        editor.putString("token", sessionToken);
+        editor.commit();
 
         keepLogin();
 
@@ -210,11 +220,9 @@ public class LoginActivity extends AppCompatActivity {
         if(checked) {
             //
 
-            SharedPreferences access = getSharedPreferences("Login", MODE_PRIVATE);
-            SharedPreferences.Editor editor = access.edit();
-            editor.putString("username", _usernameText.getText().toString());
-            editor.putString("password", _passwordText.getText().toString());
-            editor.putInt("userID", sessionUserID);
+            access = getSharedPreferences("Login", MODE_PRIVATE);
+            editor = access.edit();
+            editor.putBoolean("stayLogin", true);
             editor.commit();
         }
     }
