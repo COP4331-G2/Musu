@@ -14,9 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.GridLayout;
-import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -34,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -96,18 +98,25 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         try{
             Log.i("TAG", post.getTags().get(0).toString());
 
-            while( len > 0 && j < len && j < 10){
+            while( len > 0 && j < len && j < 4){
                 s = post.getTags().get(j).toString();
                 TextView temp = new TextView(context);
                 temp.setText(s);
                 temp.setBackgroundResource(R.drawable.tag_view);
-                pTags.add(temp);
+                temp.setElevation(5);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                params.setMargins(10,10,10,10);
+                temp.setLayoutParams(params);
+                //pTags.add(temp);
                 contactViewHolder.tagArea.addView(temp);
                 j++;
             }
-
-            //final ArrayAdapter<TextView> gvAdapter = new ArrayAdapter<TextView>(context, android.R.layout.simple_list_item_1, pTags);
-            //contactViewHolder.tagArea.setAdapter(gvAdapter);
+            if(len > 4){
+                TextView t = new TextView(context);
+                t.setText("...");
+                t.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+                contactViewHolder.tagArea.addView(t);
+            }
 
         }catch (JSONException e){
             Log.e("TAG", e.toString());
@@ -145,6 +154,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
                 //bit.compress(Bitmap.CompressFormat.PNG, 50, barray);
                 //intent.putExtra("post_image", barray.toByteArray());
                 intent.putExtra("post_image", post.getImageURL());
+                intent.putStringArrayListExtra("post_tags", (ArrayList<String>) TagStringArray(post));
                 fragment.startActivity(intent);
             }
         });
@@ -155,7 +165,8 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
                 fragment.findViewById(R.id.overlay_personal).setVisibility(View.VISIBLE);
                 ImageView imgOver = fragment.findViewById(R.id.imgOverlaypersonal);
-                imgOver.setImageDrawable(contactViewHolder.img.getDrawable());
+                //imgOver.setImageDrawable(contactViewHolder.img.getDrawable());
+                Picasso.with(context).load(post.getImageURL()).into(imgOver);
                 recyclerView.setLayoutFrozen(true);
                 cPost.setVisibility(View.GONE);
 
@@ -245,7 +256,18 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
             return new ContactViewHolder(itemView);
     }
+    public List TagStringArray(Post p){
+        List<String> tgs = new ArrayList<String>();
+        try{
+            for (int k = 0; k < p.getTags().length(); k++){
+                tgs.add(p.getTags().get(k).toString());
+            }
+        }catch (JSONException e){
+            Log.e("JSON Array", e.toString());
+        }
 
+        return tgs;
+    }
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView postDetail;
