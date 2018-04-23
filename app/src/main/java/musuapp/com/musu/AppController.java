@@ -31,7 +31,7 @@ public class AppController extends Application {
         super.onCreate();
         mInstance = this;
         Map myMap = new HashMap();
-        myMap.put("cloud_name", "dgz4xvj8r");
+        myMap.put("cloud_name", "cop4331g2");
         super.onCreate();
         MediaManager.init(this, myMap);
     }

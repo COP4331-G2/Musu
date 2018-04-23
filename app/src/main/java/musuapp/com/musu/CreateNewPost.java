@@ -1,7 +1,11 @@
 package musuapp.com.musu;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,28 +16,48 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.cloudinary.android.policy.TimeWindow;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CreateNewPost extends AppCompatActivity {
 
+    public static final String apiURL = "http://www.musuapp.com/API/API.php";
+    public static final String TAG = CreateNewPost.class.getSimpleName();
     static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int PICK_IMAGE = 2;
     String currentPhotoPath;
-    String cloudinaryLink;
+    String cloudinaryLink = "";
+    private EditText bodyText;
+    private EditText tags;
+    private Bitmap currentBitmap;
+    SharedPreferences access;
+    private ProgressDialog progressDialog;
+    private ProgressBar suggest_loader;
 
 
 
@@ -45,6 +69,14 @@ public class CreateNewPost extends AppCompatActivity {
         File testFile = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         String testPath = testFile != null ? testFile.getPath() : null;
         Log.d("File path: ", testPath);
+        bodyText = findViewById(R.id.editText2);
+        tags = findViewById(R.id.postTags);
+        access = getSharedPreferences("Login", MODE_PRIVATE);
+        progressDialog = new ProgressDialog(CreateNewPost.this,
+                R.style.AppTheme_Dark);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        suggest_loader = findViewById(R.id.suggest_loader);
     }
 
     // Create a unique file name space for the image
@@ -104,35 +136,28 @@ public class CreateNewPost extends AppCompatActivity {
         startActivityForResult(pickIntent, PICK_IMAGE);
     }
 
-    public void uploadImage(View view)
+    public void uploadImage(String imagePath)
     {
-        ProgressBar progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
-
-
         // Upload the image to the Cloudinary server
-        MediaManager.get().upload(currentPhotoPath).unsigned("musu_preset").constrain(TimeWindow.immediate()).callback(new UploadCallback() {
-            ProgressBar progressBar = findViewById(R.id.progressBar);
+        MediaManager.get().upload(imagePath).unsigned("musu_preset").constrain(TimeWindow.immediate()).callback(new UploadCallback() {
 
             @Override
             public void onStart(String requestId) {
+
             }
             @Override
             public void onProgress(String requestId, long bytes, long totalBytes) {
-                // post progress to app UI (e.g. progress bar, notification)
-                double progress = (double) bytes/totalBytes;
-                int intProgress = (int) progress;
-                progressBar.setProgress(intProgress);
             }
             @Override
             public void onSuccess(String requestId, Map resultData) {
                 cloudinaryLink = resultData.get("url").toString();
-                progressBar.setProgress(100);
+                // Unfreeze screen when upload is done
+                progressDialog.dismiss();
 
-                Intent intent = getIntent();
-                int userID = intent.getIntExtra("userID", 0);
+                //Intent intent = getIntent();
+                //int userID = intent.getIntExtra("userID", 0);
                 // Add API call to store image and information
-                createServerPost(cloudinaryLink);
+
             }
             @Override
             public void onError(String requestId, ErrorInfo error) {
@@ -150,19 +175,155 @@ public class CreateNewPost extends AppCompatActivity {
 
     }
 
-    private void createServerPost(String imageURL)
+    // This will trigger when the
+    // suggest Tags button is pushed
+    public void suggestTags(View view)
     {
-        // Add connection to Volley
+        if(cloudinaryLink == "")
+        {
+            Toast.makeText(this, "Take or Select a pic first", Toast.LENGTH_SHORT).show();
+        }
+        else {
 
-        // Create JSON Payload
+            // Show the loader
+            suggest_loader.setVisibility(View.VISIBLE);
 
-        // Send JSON Payload
+            // Get the body text from bodyText
+            String bodyText = this.bodyText.getText().toString();
 
-        // Receive JSON Response
+            // Volley call that will send imageURL to API
+            String token = access.getString("token", "");
+            Integer userID = access.getInt("userID", -1);
 
-        // On successfull post give Toast that the post was successful
+            // Build a map with the parameters I want to send to server
+            Map<String, String> postParam = new HashMap<String, String>();
+            postParam.put("function", "suggestTags");
+            postParam.put("imageURL", cloudinaryLink);
+            postParam.put("bodyText", bodyText);
+
+            // JSON Object to send to the server
+            JSONObject parameters = new JSONObject(postParam);
+
+            // Building the actual request
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiURL, parameters,
+                    new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // Logic goes here
 
 
+                            try {
+                                // Declare objects
+                                String tempTag;
+                                String tagList = "";
+
+                                // Get the JSON Array with the Posts
+                                JSONArray jsonArray = response.getJSONArray("results");
+
+                                // Parse through the json array
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    // Get the String
+                                    tempTag = jsonArray.getString(i);
+
+                                    // Create a total String
+                                    tagList = tagList + tempTag + ", ";
+                                }
+
+                                // Add the text to the editText
+                                tags.setText(tagList);
+
+                                suggest_loader.setVisibility(View.INVISIBLE);
+
+
+                            } catch (JSONException e) {
+                                Log.e(TAG, e.toString());
+                            }
+                        }
+
+                    }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // Print VolleyLog to the console
+                    VolleyLog.e(TAG, "Error: " + error.getMessage());
+                }
+            }); // !! The request building of "jsonObjReq" ends here !!
+
+            // Add the Request to the queue and execute
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "json_obj_req");
+        }
+    }
+
+
+    public void createPost(View view)
+    {
+        // Make sure there is an image to upload
+        if(cloudinaryLink == "")
+        {
+            Toast.makeText(this, "Either take or select an image first", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            // Start volley for making a new post
+            // Show the loader
+            suggest_loader.setVisibility(View.VISIBLE);
+
+            // Get the body text from bodyText
+            String bodyText = this.bodyText.getText().toString();
+
+            // Get the tags
+            String tags = "[" + this.tags.getText().toString() + "]";
+
+            // Volley call that will send imageURL to API
+            String token = access.getString("token", "");
+            Integer userID = access.getInt("userID", -1);
+
+            // Build a map with the parameters I want to send to server
+            Map<String, String> postParam = new HashMap<String, String>();
+            postParam.put("function", "createPost");
+            postParam.put("imageURL", cloudinaryLink);
+            postParam.put("bodyText", bodyText);
+            postParam.put("userID", userID.toString());
+            postParam.put("token", token);
+            postParam.put("tags", tags);
+
+            // JSON Object to send to the server
+            JSONObject parameters = new JSONObject(postParam);
+
+            // Building the actual request
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiURL, parameters,
+                    new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // Logic goes here
+
+
+                            try {
+                                if(response.getBoolean("success")) {
+                                    Log.e("Some JSON Stuff", "TRUE");
+                                } else{
+                                    Log.e("Some JSON Stuff", "FALSE");
+                                }
+                            } catch (JSONException e) {
+                                Log.e(TAG, e.toString());
+                            }
+
+                            suggest_loader.setVisibility(View.INVISIBLE);
+                        }
+
+                    }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // Print VolleyLog to the console
+                    VolleyLog.e(TAG, "Error: " + error.getMessage());
+                }
+            }); // !! The request building of "jsonObjReq" ends here !!
+
+            // Add the Request to the queue and execute
+            AppController.getInstance().addToRequestQueue(jsonObjReq, "json_obj_req");
+        }
     }
 
 
@@ -174,6 +335,8 @@ public class CreateNewPost extends AppCompatActivity {
         // Get the views by ID and put them in objects
         TextView textView = findViewById(R.id.textView2);
         ImageButton imageButton = findViewById(R.id.imageButton);
+
+        progressDialog.show();
 
         // If we requested an image and it was taken
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -192,10 +355,13 @@ public class CreateNewPost extends AppCompatActivity {
                 Bitmap imageBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
                 int newHeight = (int) (imageBitmap.getHeight() * (512.0 / imageBitmap.getWidth()));
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(imageBitmap, 512, newHeight, true);
+                this.currentBitmap = Bitmap.createScaledBitmap(imageBitmap, 512, newHeight, true);
 
                 // Set the image view to the freshly created Bitmap
-                imageButton.setImageBitmap(scaledBitmap);
+                imageButton.setImageBitmap(currentBitmap);
+
+                // Upload Image
+                uploadImage(currentPhotoPath);
             }
         }
 
@@ -211,14 +377,38 @@ public class CreateNewPost extends AppCompatActivity {
                 // Create a Bitmap from the image Uri
                 Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
 
+                //Scale down image
+                int newHeight = (int) (imageBitmap.getHeight() * (512.0 / imageBitmap.getWidth()));
+                this.currentBitmap = Bitmap.createScaledBitmap(imageBitmap, 512, newHeight, true);
+
                 // Set the imageView to the newly created Bitmap
-                imageButton.setImageBitmap(imageBitmap);
+                imageButton.setImageBitmap(currentBitmap);
+
+                // Upload this image
+                uploadImage(getRealPathFromUri(getBaseContext(), imageUri));
             } catch (IOException e) {
                 // Error Handling
                 e.printStackTrace();
             }
         }
     }
+
+    public static String getRealPathFromUri(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+
 
     /**
      * react to the user tapping the back/up icon in the action bar
