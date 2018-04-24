@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +11,7 @@
         android:layout_height="49dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:selectAllOnFocus="true"
@@ -28,7 +27,7 @@
         android:layout_height="49dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:selectAllOnFocus="true"
@@ -39,28 +38,12 @@
         app:layout_constraintTop_toBottomOf="@+id/input_firstname" />
 
     <EditText
-        android:id="@+id/input_username"
-        android:layout_width="wrap_content"
-        android:layout_height="49dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:selectAllOnFocus="true"
-        android:text="Username"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_lastname" />
-
-    <EditText
         android:id="@+id/input_password"
         android:layout_width="wrap_content"
         android:layout_height="46dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:selectAllOnFocus="true"
@@ -76,7 +59,7 @@
         android:layout_height="46dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:selectAllOnFocus="true"
@@ -87,12 +70,12 @@
         app:layout_constraintTop_toBottomOf="@+id/input_password" />
 
     <EditText
-        android:id="@+id/input_username"
+        android:id="@+id/input_email"
         android:layout_width="wrap_content"
         android:layout_height="46dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:selectAllOnFocus="true"
@@ -108,9 +91,29 @@
         android:layout_height="40dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:text="Sign Up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_username" />
+        app:layout_constraintTop_toBottomOf="@+id/input_email" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <EditText
+        android:id="@+id/input_username"
+        android:layout_width="215dp"
+        android:layout_height="49dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:selectAllOnFocus="true"
+        android:text="Username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_lastname" />
 </android.support.constraint.ConstraintLayout>

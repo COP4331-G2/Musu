@@ -10,15 +10,14 @@
 
     <ImageButton
         android:id="@+id/imageButton"
-        android:layout_width="0dp"
-        android:layout_height="280dp"
+        android:layout_width="178dp"
+        android:layout_height="120dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@android:color/background_light"
         android:onClick="takePicture"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +31,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:onClick="uploadImage"
+        android:onClick="createPost"
         android:text="@string/new_post_submit_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -63,45 +62,66 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButton" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_gallery" />
-
     <EditText
         android:id="@+id/editText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="359dp"
+        android:layout_height="53dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="16dp"
         android:ems="10"
         android:hint="@string/new_post_caption"
         android:inputType="textPersonName"
+        android:textColor="@color/jet"
+        android:textCursorDrawable="?android:attr/textCursorDrawable"
+        android:textDirection="ltr"
         app:layout_constraintBottom_toTopOf="@+id/postTags"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <EditText
         android:id="@+id/postTags"
         style="@android:style/Widget.TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="357dp"
+        android:layout_height="47dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
         android:ems="10"
-        android:hint="#add #tags"
+        android:hint="Seperate tags with commas"
         android:inputType="text"
+        android:textColor="@color/jet"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/suggest_tags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="suggestTags"
+        android:text="Suggest Tags"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/postTags" />
+
+    <ProgressBar
+        android:id="@+id/suggest_loader"
+        style="@android:style/Widget.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/spinner_loader"
+        android:max="1"
+        android:progress="1"
+        android:progressDrawable="@mipmap/doge_round"
+        android:progressTint="@color/primary_dark"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/suggest_tags" />
 
 </android.support.constraint.ConstraintLayout>

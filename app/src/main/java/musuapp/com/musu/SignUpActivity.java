@@ -1,5 +1,6 @@
 package musuapp.com.musu;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,14 +9,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 public class SignUpActivity extends AppCompatActivity {
+    public static Context context;
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        context = super.getBaseContext();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         final TextView _firstname = findViewById(R.id.input_firstname);
@@ -23,8 +28,15 @@ public class SignUpActivity extends AppCompatActivity {
         final TextView _username = findViewById(R.id.input_username);
         final TextView _password = findViewById(R.id.input_password);
         final TextView _verifyPassword = findViewById(R.id.input_verify_password);
-        final TextView _email =  findViewById(R.id.input_username);
+        final TextView _email =  findViewById(R.id.input_email);
         final Button btn_signup  = findViewById(R.id.btn_SignUp);
+
+        if(!_verifyPassword.equals(_password))
+        {
+            Toast toast = Toast.makeText(context,"Passwords do not match", Toast.LENGTH_LONG);
+            toast.show();
+
+        }
 
         btn_signup.setOnClickListener(new View.OnClickListener()
         {
@@ -52,7 +64,7 @@ public class SignUpActivity extends AppCompatActivity {
                     jsonTest.put("emailAddress", email);
                     jsonTest.put("token", token);
 
-                    Log.e("TEST (JSON payload): ", jsonTest.toString());
+                    Log.e("sign (JSON payload): ", jsonTest.toString());
 
                     conn.execute(serverName, jsonTest.toString());
                 } catch (JSONException e) {
@@ -70,12 +82,14 @@ public class SignUpActivity extends AppCompatActivity {
                                 String successResult = new String();
                                 successResult = connJSON.get("success").toString().trim();
 
-                                Log.e("TEST (JSON result): ", successResult);
+                                Log.e("sign (JSON result): ", successResult);
 
                                 if (successResult.equals("true")) {
-                                    btn_signup.setText(getString(R.string.signup_success));
+                                    Toast toast = Toast.makeText(SignUpActivity.context, "Successfully signed up!", Toast.LENGTH_LONG);
+                                    toast.show();
                                 } else {
-                                    btn_signup.setText(getString(R.string.signup_failed));
+                                    Toast toast = Toast.makeText(SignUpActivity.context, "Problem when trying to Sign up", Toast.LENGTH_LONG);
+                                    toast.show();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -84,7 +98,6 @@ public class SignUpActivity extends AppCompatActivity {
                     }, 2000
                 );
 
-//                btn_signup.setText("signed up");
             }
         });
 

@@ -3,6 +3,7 @@ package musuapp.com.musu;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,28 +18,45 @@ import android.widget.LinearLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import com.squareup.picasso.*;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provide views to RecyclerView with data from mDataSet.
  */
 public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.ContactViewHolder> {
 
+    public static final String apiURL = "http://www.musuapp.com/API/API.php";
+    public static final String TAG = PersonalFragment.class.getSimpleName();
     private List<Post> postList;
-    private Context context;
+    public static Context context;
     private RecyclerView recyclerView;
-    private Activity fragment;
+    private static Activity fragment;
     private FloatingActionButton cPost;
+    private static String userToken;
 
     public PersonalAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost)
     {
+        SharedPreferences token = context.getSharedPreferences("Login", Context.MODE_PRIVATE);
+        this.userToken = token.getString("token", "null");
         this.postList = posts;
         this.context = context;
         this.fragment = fragment;
@@ -114,12 +132,12 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
             public void onClick(View v) {
                 if(contactViewHolder.like.isChecked() == true){
                     // like button is now checked
-
+                    PersonalAdapter.LikeOrUnlikeImage(post, true);
                     // api call to like post for user
 
                 } else {
                     // like button is now unchecked
-
+                    PersonalAdapter.LikeOrUnlikeImage(post, false);
                     // api call to dislike post for user
 
                 }
@@ -166,6 +184,70 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         final List<TextView> personalTags = new ArrayList<>();
 
         return null;
+    }
+    public static void LikeOrUnlikeImage(final Post post, boolean like)
+    {
+        String postID = Integer.toString(post.getPostID());
+        String userID = Integer.toString(post.getUserID());
+
+
+        // Build a map with the parameters I want to send to server
+        Map<String, String> postParam = new HashMap<String, String>();
+
+        if(like) postParam.put("function", "likePost");
+        else postParam.put("function", "unlikePost");
+
+        postParam.put("userID", userID);
+        postParam.put("postID", postID);
+        postParam.put("token", PersonalAdapter.userToken);
+
+        // JSON Object to send to the server
+        JSONObject parameters = new JSONObject(postParam);
+
+        // Building the actual request
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiURL, parameters,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Logic goes here
+
+
+                        try{
+                            // Declare objects
+                            //List<Post> results = new ArrayList<Post>();
+
+                            // Get the JSON Array with the Posts
+                            boolean responseSuccess = (boolean)response.get("success");
+                            String responseText = (String)response.get("message");
+                            if(responseSuccess)
+                            {
+                                Toast toast = Toast.makeText(context,responseText, Toast.LENGTH_LONG);
+                                post.setLiked(responseText);
+                                toast.show();
+                            }
+
+                            // Create the adapter with the list
+                            //adapter = new MyAdapter(rv, getActivity(), results);
+
+
+                        } catch (JSONException e){
+                            Log.e(TAG, e.toString());
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Print VolleyLog to the console
+                VolleyLog.e(TAG, "Error: " + error.getMessage());
+            }
+        }); // !! The request building of "jsonObjReq" ends here !!
+
+        // Add the Request to the queue and execute
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "json_obj_req");
+
     }
 
 
