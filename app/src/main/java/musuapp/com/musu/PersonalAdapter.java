@@ -73,36 +73,39 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         Picasso.with(context).load(post.getImageURL()).fit().into(contactViewHolder.img);
 
         ArrayList<TextView> pTags = new ArrayList<TextView>();
-        int len = post.getTags().length();
+        int len = post.getTags().size();
         int j = 0;
         String s = "";
        // while ( )
-        try{
-            Log.i("TAG", post.getTags().get(0).toString());
+
+            //Log.i("TAG", post.getTags().get(0).toString());
 
             while( len > 0 && j < len && j < 4){
-                s = post.getTags().get(j).toString();
-                TextView temp = new TextView(context);
-                temp.setText(s);
-                temp.setBackgroundResource(R.drawable.tag_view);
-                temp.setElevation(5);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-                params.setMargins(10,10,10,10);
-                temp.setLayoutParams(params);
-                //pTags.add(temp);
-                contactViewHolder.tagArea.addView(temp);
+                if((s = post.getTags().get(j))!= null) {
+                    //s = post.getTags().get(j);
+                    TextView temp = new TextView(context);
+                    temp.setText(s);
+                    temp.setBackgroundResource(R.drawable.tag_view);
+                    temp.setElevation(5);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                    params.setMargins(10, 10, 10, 10);
+                    temp.setLayoutParams(params);
+                    //pTags.add(temp);
+                    contactViewHolder.tagArea.addView(temp);
+                }
                 j++;
             }
             if(len > 4){
                 TextView t = new TextView(context);
                 t.setText("...");
-                t.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                params.setMargins(10,10,10,10);
+                //t.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
+                t.setLayoutParams(params);
                 contactViewHolder.tagArea.addView(t);
             }
 
-        }catch (JSONException e){
-            Log.e("TAG", e.toString());
-        }
+
 
 
 
@@ -136,7 +139,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
                 //bit.compress(Bitmap.CompressFormat.PNG, 50, barray);
                 //intent.putExtra("post_image", barray.toByteArray());
                 intent.putExtra("post_image", post.getImageURL());
-                intent.putStringArrayListExtra("post_tags", (ArrayList<String>) TagStringArray(post));
+                intent.putStringArrayListExtra("post_tags", (ArrayList<String>) post.getTags());
                 fragment.startActivity(intent);
             }
         });
@@ -174,7 +177,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
             return new ContactViewHolder(itemView);
     }
-    public List TagStringArray(Post p){
+    /*public List TagStringArray(Post p){
         List<String> tgs = new ArrayList<String>();
         try{
             for (int k = 0; k < p.getTags().length(); k++){
@@ -185,7 +188,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         }
 
         return tgs;
-    }
+    }*/
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView postDetail;

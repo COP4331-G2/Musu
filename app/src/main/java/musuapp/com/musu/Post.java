@@ -1,8 +1,12 @@
 package musuapp.com.musu;
 
+import android.util.Log;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Post {
 
@@ -89,7 +93,19 @@ public class Post {
 
     public boolean getIsLiked() { return this.isLiked; }
 
-    public JSONArray getTags() {return this.tags; }
+    public List<String> getTags() {
+        List<String> tgs = new ArrayList<String>();
+        try {
+            for (int k = 0; k < tags.length(); k++) {
+                tgs.add(tags.get(k).toString());
+            }
+        }catch (JSONException e){
+            Log.e("GET TAGS", e.toString());
+        }
+
+        return tgs;
+
+    }
 
     public String toString()
     {

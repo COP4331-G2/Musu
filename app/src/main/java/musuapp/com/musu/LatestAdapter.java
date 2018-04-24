@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +40,7 @@ public class LatestAdapter extends RecyclerView.Adapter<LatestAdapter.ContactVie
     {
         this.postList.add(newPost);
     }
+
     @Override
     public int getItemCount() {
         return postList.size();
@@ -77,6 +79,23 @@ public class LatestAdapter extends RecyclerView.Adapter<LatestAdapter.ContactVie
                 cPost.setVisibility(View.GONE);
 
                 return false;
+            }
+        });
+
+        contactViewHolder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(fragment, DetailPostView.class);
+                intent.putExtra("author", post.getUserName());
+                intent.putExtra("post_text", post.getBodyText());
+                // Bitmap bit = ((BitmapDrawable)contactViewHolder.img.getDrawable()).getBitmap();
+                //ByteArrayOutputStream barray = new ByteArrayOutputStream();
+                //bit.compress(Bitmap.CompressFormat.PNG, 50, barray);
+                //intent.putExtra("post_image", barray.toByteArray());
+                intent.putExtra("post_image", post.getImageURL());
+                intent.putStringArrayListExtra("post_tags", (ArrayList<String>) post.getTags());
+                fragment.startActivity(intent);
             }
         });
 

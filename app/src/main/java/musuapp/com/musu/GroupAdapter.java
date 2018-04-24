@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Provide views to RecyclerView with data from mDataSet.
@@ -70,6 +71,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
                 intent.putExtra("author", post.getUserName());
                 intent.putExtra("post_text", post.getBodyText());
                 intent.putExtra("post_image", post.getImageURL());
+                intent.putStringArrayListExtra("post_tags", (ArrayList<String>) post.getTags());
                 fragment.startActivity(intent);
             }
         });
