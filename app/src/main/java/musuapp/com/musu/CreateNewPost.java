@@ -54,7 +54,8 @@ public class CreateNewPost extends AppCompatActivity {
     public static final String TAG = CreateNewPost.class.getSimpleName();
     static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int PICK_IMAGE = 2;
-    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 0;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1000;
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1001;
     String currentPhotoPath;
     String cloudinaryLink = "";
     private EditText bodyText;
@@ -138,6 +139,22 @@ public class CreateNewPost extends AppCompatActivity {
             // If the permission has already been granted
 
             takePicture(view);
+        }
+    }
+
+    public void checkReadExternalStoragePermissions(View view) {
+        // Check to see if READ_EXTERNAL_STORAGE permission has been granted first
+        if (ContextCompat.checkSelfPermission(CreateNewPost.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            // Save the view into a global variable
+            createNewPostView = view;
+
+            // If the permission has NOT already been granted, request the permissions
+            ActivityCompat.requestPermissions(CreateNewPost.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        } else {
+            // If the permission has already been granted
+
+            chosePicture(view);
         }
     }
 
@@ -456,6 +473,23 @@ public class CreateNewPost extends AppCompatActivity {
                     // contacts-related task you need to do.
 
                     takePicture(createNewPostView);
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    chosePicture(createNewPostView);
 
                 } else {
 
