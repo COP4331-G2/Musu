@@ -1,16 +1,20 @@
 package musuapp.com.musu;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,6 +54,7 @@ public class CreateNewPost extends AppCompatActivity {
     public static final String TAG = CreateNewPost.class.getSimpleName();
     static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int PICK_IMAGE = 2;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 0;
     String currentPhotoPath;
     String cloudinaryLink = "";
     private EditText bodyText;
@@ -58,9 +63,7 @@ public class CreateNewPost extends AppCompatActivity {
     SharedPreferences access;
     private ProgressDialog progressDialog;
     private ProgressBar suggest_loader;
-
-
-
+    private View createNewPostView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +122,22 @@ public class CreateNewPost extends AppCompatActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+        }
+    }
+
+    public void checkCameraPermissions(View view) {
+        // Check to see if CAMERA permission has been granted first
+        if (ContextCompat.checkSelfPermission(CreateNewPost.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+            // Save the view into a global variable
+            createNewPostView = view;
+
+            // If the permission has NOT already been granted, request the permissions
+            ActivityCompat.requestPermissions(CreateNewPost.this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+        } else {
+            // If the permission has already been granted
+
+            takePicture(view);
         }
     }
 
@@ -423,6 +442,31 @@ public class CreateNewPost extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    takePicture(createNewPostView);
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
         }
     }
 }
