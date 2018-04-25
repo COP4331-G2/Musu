@@ -307,24 +307,25 @@ public class CreateNewPost extends AppCompatActivity {
             // Get the body text from bodyText
             String bodyText = this.bodyText.getText().toString();
 
-            // Get the tags
-            String tags = "[" + this.tags.getText().toString() + "]";
-
             // Volley call that will send imageURL to API
             String token = access.getString("token", "");
             Integer userID = access.getInt("userID", -1);
 
-            // Build a map with the parameters I want to send to server
-            Map<String, String> postParam = new HashMap<String, String>();
-            postParam.put("function", "createPost");
-            postParam.put("imageURL", cloudinaryLink);
-            postParam.put("bodyText", bodyText);
-            postParam.put("userID", userID.toString());
-            postParam.put("token", token);
-            postParam.put("tags", tags);
-
             // JSON Object to send to the server
-            JSONObject parameters = new JSONObject(postParam);
+            JSONObject parameters = new JSONObject();
+
+            try {
+                parameters.put("function", "createPost");
+                parameters.put("imageURL", cloudinaryLink);
+                parameters.put("bodyText", bodyText);
+                parameters.put("userID", userID);
+                parameters.put("token", token);
+                parameters.put("tags", new JSONArray(this.tags.getText().toString().split(",")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Log.e("JSON Payload", parameters.toString());
 
             // Building the actual request
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiURL, parameters,
