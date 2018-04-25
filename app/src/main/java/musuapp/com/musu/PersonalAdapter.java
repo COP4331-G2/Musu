@@ -88,7 +88,12 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         contactViewHolder.postDetail.setText(post.getBodyText());
         contactViewHolder.author.setText(post.getUserName());
         contactViewHolder.like.setChecked(post.getIsLiked());
-        Picasso.with(context).load(post.getImageURL()).fit().into(contactViewHolder.img);
+
+        try {
+            Picasso.with(context).load(post.getImageURL()).fit().into(contactViewHolder.img);
+        } catch (Exception e) {
+            Picasso.with(context).load(R.drawable.image_not_found).into(contactViewHolder.img);
+        }
 
         ArrayList<TextView> pTags = new ArrayList<TextView>();
         int len = post.getTags().size();
@@ -169,7 +174,13 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
                 fragment.findViewById(R.id.overlay_personal).setVisibility(View.VISIBLE);
                 ImageView imgOver = fragment.findViewById(R.id.imgOverlaypersonal);
                 //imgOver.setImageDrawable(contactViewHolder.img.getDrawable());
-                Picasso.with(context).load(post.getImageURL()).into(imgOver);
+
+                try {
+                    Picasso.with(context).load(post.getImageURL()).into(imgOver);
+                } catch (Exception e) {
+                    Picasso.with(context).load(R.drawable.image_not_found).into(imgOver);
+                }
+
                 recyclerView.setLayoutFrozen(true);
                 cPost.setVisibility(View.GONE);
 
