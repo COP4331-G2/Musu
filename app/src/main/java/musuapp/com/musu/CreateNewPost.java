@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.view.MenuItem;
 import android.widget.Toast;
+import java.io.File;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -36,6 +37,7 @@ import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.cloudinary.android.policy.TimeWindow;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,6 +68,10 @@ public class CreateNewPost extends AppCompatActivity {
     private ProgressBar suggest_loader;
     private View createNewPostView;
 
+    public Uri file;
+    TextView textView;
+    ImageButton imageButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +87,8 @@ public class CreateNewPost extends AppCompatActivity {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Loading...");
         suggest_loader = findViewById(R.id.suggest_loader);
+        textView = findViewById(R.id.textView2);
+        imageButton = findViewById(R.id.imageButton);
     }
 
     // Create a unique file name space for the image
@@ -98,32 +106,71 @@ public class CreateNewPost extends AppCompatActivity {
         return image;
     }
 
+    private static File getOutputMediaFile() {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "Musu");
+
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+            return null;
+        }
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+        return new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
+    }
+
+    public void chosePicture(View view)
+    {
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+        startActivityForResult(pickIntent, PICK_IMAGE);
+    }
+
     public void takePicture(View view)
     {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Check to see if there is an application to handle this intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null)
-        {
-            // Create image file
-            File imageFile = null;
-            try
-            {
-                imageFile = createPhotoPath();
-            } catch (IOException e)
-            {
-                // We caught an IOException
-                Log.e("Error: ", e.toString());
-            }
 
-            // Continue now that image has a file path
-            // but still check that everything is ok
-            if(imageFile != null)
-            {
-                Uri imageUri = FileProvider.getUriForFile(this, "musuapp.com.musu.fileprovider", imageFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+        file = Uri.fromFile(getOutputMediaFile());
+
+        File imageFile = null;
+        try {
+            imageFile = createPhotoPath();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Uri imageUri = FileProvider.getUriForFile(this, "musuapp.com.musu.fileprovider", imageFile);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFile);
+
+        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+        // Check to see if there is an application to handle this intent
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null)
+//        {
+//            // Create image file
+//            File imageFile = null;
+//            try
+//            {
+//                imageFile = createPhotoPath();
+//            } catch (IOException e)
+//            {
+//                // We caught an IOException
+//                Log.e("Error: ", e.toString());
+//            }
+//
+//            // Continue now that image has a file path
+//            // but still check that everything is ok
+//            if(imageFile != null)
+//            {
+//                Uri imageUri = FileProvider.getUriForFile(this, "musuapp.com.musu.fileprovider", imageFile);
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//            }
+//        }
     }
 
     public void checkCameraPermissions(View view) {
@@ -134,7 +181,7 @@ public class CreateNewPost extends AppCompatActivity {
             createNewPostView = view;
 
             // If the permission has NOT already been granted, request the permissions
-            ActivityCompat.requestPermissions(CreateNewPost.this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+            ActivityCompat.requestPermissions(CreateNewPost.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_CAMERA);
         } else {
             // If the permission has already been granted
 
@@ -156,20 +203,6 @@ public class CreateNewPost extends AppCompatActivity {
 
             chosePicture(view);
         }
-    }
-
-    public void chosePicture(View view)
-    {
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("image/*");
-
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("image/*");
-
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-        startActivityForResult(pickIntent, PICK_IMAGE);
     }
 
     public void uploadImage(String imagePath)
@@ -367,66 +400,88 @@ public class CreateNewPost extends AppCompatActivity {
     // Return function catching image from camera app
     // and file returned from media chooser
     @Override
-    protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Picasso.with(this).load(file).fit().into(imageButton);
 
-        // Get the views by ID and put them in objects
-        TextView textView = findViewById(R.id.textView2);
-        ImageButton imageButton = findViewById(R.id.imageButton);
+            File imgFile = new File(currentPhotoPath);
 
-        progressDialog.show();
+//            String filePath = getRealPathFromUri(getBaseContext(), file);
+//
+//            Log.e("FILE PATH", filePath);
+
+            uploadImage(currentPhotoPath);
+        }
+
+//        progressDialog.show();
 
         // If we requested an image and it was taken
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
             // Create a file out of the imagepath
             // This is the imagepath we passed to the camera app
-            File imgFile = new File(currentPhotoPath);
+//            File imgFile = new File(currentPhotoPath);
 
-            // If the file exists
-            if(imgFile.exists()) {
+//            Bundle extras = data.getExtras();
+//            Bitmap imageBitmap = (Bitmap) extras.get("data");
+//            imageButton.setImageBitmap(imageBitmap);
 
-                // Hide the ImageButton "Tap to take Picture"
-                textView.setVisibility(View.GONE);
-
-                //Create a Bitmap from the image filepath
-                Bitmap imageBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-                int newHeight = (int) (imageBitmap.getHeight() * (512.0 / imageBitmap.getWidth()));
-                this.currentBitmap = Bitmap.createScaledBitmap(imageBitmap, 512, newHeight, true);
-
-                // Set the image view to the freshly created Bitmap
-                imageButton.setImageBitmap(currentBitmap);
-
-                // Upload Image
-                uploadImage(currentPhotoPath);
-            }
-        }
+//            // If the file exists
+//            if(imgFile.exists()) {
+//
+//                // Hide the ImageButton "Tap to take Picture"
+//                textView.setVisibility(View.GONE);
+//
+//                //Create a Bitmap from the image filepath
+//                Bitmap imageBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//
+//                int newHeight = (int) (imageBitmap.getHeight() * (512.0 / imageBitmap.getWidth()));
+//                this.currentBitmap = Bitmap.createScaledBitmap(imageBitmap, 512, newHeight, true);
+//
+//                // Set the image view to the freshly created Bitmap
+//                imageButton.setImageBitmap(currentBitmap);
+//
+//                // Upload Image
+//                uploadImage(currentPhotoPath);
+//            }
+//        }
 
         // If we requested an image from the gallery and we got one back
         // also if the data and getData are not null for safety
         else if(requestCode == PICK_IMAGE && data != null && data.getData() != null)
         {
+            file = data.getData();
+
+            Picasso.with(this).load(file).fit().into(imageButton);
+
+            String filePath = getRealPathFromUri(getBaseContext(), file);
+
+            Log.e("FILE PATH", filePath);
+
+            uploadImage(filePath);
+//            uploadImage(getRealPathFromUri(getBaseContext(), file));
+
             // Create Uri object with the image path
             // The image path from the file choser is in the data.getData()
-            Uri imageUri = data.getData();
-
-            try {
-                // Create a Bitmap from the image Uri
-                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-
-                //Scale down image
-                int newHeight = (int) (imageBitmap.getHeight() * (512.0 / imageBitmap.getWidth()));
-                this.currentBitmap = Bitmap.createScaledBitmap(imageBitmap, 512, newHeight, true);
-
-                // Set the imageView to the newly created Bitmap
-                imageButton.setImageBitmap(currentBitmap);
-
-                // Upload this image
-                uploadImage(getRealPathFromUri(getBaseContext(), imageUri));
-            } catch (IOException e) {
-                // Error Handling
-                e.printStackTrace();
-            }
+//            Uri imageUri = data.getData();
+//
+//            try {
+//                // Create a Bitmap from the image Uri
+//                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+//
+//                //Scale down image
+//                int newHeight = (int) (imageBitmap.getHeight() * (512.0 / imageBitmap.getWidth()));
+//                this.currentBitmap = Bitmap.createScaledBitmap(imageBitmap, 512, newHeight, true);
+//
+//                // Set the imageView to the newly created Bitmap
+//                imageButton.setImageBitmap(currentBitmap);
+//
+//                // Upload this image
+//                uploadImage(getRealPathFromUri(getBaseContext(), imageUri));
+//            } catch (IOException e) {
+//                // Error Handling
+//                e.printStackTrace();
+//            }
         }
     }
 
@@ -435,8 +490,10 @@ public class CreateNewPost extends AppCompatActivity {
         try {
             String[] proj = { MediaStore.Images.Media.DATA };
             cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
+
+            int column_index = cursor.getColumnIndex(proj[0]);
+//            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             return cursor.getString(column_index);
         } finally {
             if (cursor != null) {
