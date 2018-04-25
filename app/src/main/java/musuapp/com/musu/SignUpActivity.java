@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 public class SignUpActivity extends AppCompatActivity {
     public static Context context;
@@ -30,7 +29,7 @@ public class SignUpActivity extends AppCompatActivity {
         final TextView _username = findViewById(R.id.input_username);
         final TextView _password = findViewById(R.id.input_password);
         final TextView _verifyPassword = findViewById(R.id.input_verify_password);
-        final TextView _email =  findViewById(R.id.input_email);
+        final TextView _email =  findViewById(R.id.input_emailaddress);
         final Button btn_signup  = findViewById(R.id.btn_SignUp);
 
         activity = this;
