@@ -61,6 +61,7 @@ public class LatestAdapter extends RecyclerView.Adapter<LatestAdapter.ContactVie
         final Post post = postList.get(i);
 
 
+        contactViewHolder.img.setDefaultImageResId(R.drawable.spinner_loader);
         contactViewHolder.img.setImageUrl(post.getImageURL(), mImageLoader);
 
         //try {

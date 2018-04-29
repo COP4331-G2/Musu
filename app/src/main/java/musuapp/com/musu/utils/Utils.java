@@ -70,6 +70,8 @@ public class Utils {
                             // Get the JSON Array with the Posts
                             boolean responseSuccess = (boolean)response.get("success");
                             final String responseText = (String)response.get("message");
+
+
                             if(responseSuccess)
                             {
                                 Toast toast = Toast.makeText(context,responseText, Toast.LENGTH_LONG);

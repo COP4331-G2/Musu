@@ -86,6 +86,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
                 intent.putExtra("post_text", post.getBodyText());
                 intent.putExtra("post_image", post.getImageURL());
                 intent.putStringArrayListExtra("post_tags", (ArrayList<String>) post.getTags());
+                intent.putExtra("like", post.getIsLiked());
                 fragment.startActivity(intent);
             }
         });

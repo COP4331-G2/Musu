@@ -473,6 +473,7 @@ public class CreateNewPost extends AppCompatActivity {
                             try {
                                 if(response.getBoolean("success")) {
                                     Log.e("Some JSON Stuff", "TRUE");
+                                    finish();
                                 } else{
                                     Log.e("Some JSON Stuff", "FALSE");
                                 }
@@ -481,6 +482,8 @@ public class CreateNewPost extends AppCompatActivity {
                             }
 
                             suggest_loader.setVisibility(View.INVISIBLE);
+
+
                         }
 
                     }, new Response.ErrorListener() {
@@ -507,10 +510,12 @@ public class CreateNewPost extends AppCompatActivity {
         TextView textView = findViewById(R.id.textView2);
         ImageButton imageButton = findViewById(R.id.imageButton);
 
-        progressDialog.show();
+
 
         // If we requested an image and it was taken
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+
+            progressDialog.show();
 
             // Create a file out of the imagepath
             // This is the imagepath we passed to the camera app
@@ -540,6 +545,8 @@ public class CreateNewPost extends AppCompatActivity {
         // also if the data and getData are not null for safety
         else if(requestCode == PICK_IMAGE && data != null && data.getData() != null)
         {
+
+            progressDialog.show();
             // Create Uri object with the image path
             // The image path from the file choser is in the data.getData()
             Uri imageUri = data.getData();
