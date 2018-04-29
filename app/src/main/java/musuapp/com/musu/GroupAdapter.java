@@ -14,6 +14,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
     private FloatingActionButton cPost;
     private static int userID;
     private static String userToken;
+    private ImageLoader mImageLoader = AppController.getInstance().getImageLoader();
 
     public GroupAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost, int userID)
     {
@@ -67,11 +70,9 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
         contactViewHolder.postDetail.setText(post.getBodyText());
         contactViewHolder.author.setText(post.getUserName());
         //contactViewHolder.like.setChecked(false);
-        try {
-            Picasso.with(context).load(post.getImageURL()).fit().into(contactViewHolder.img);
-        } catch (Exception e) {
-            Picasso.with(context).load(R.drawable.image_not_found).into(contactViewHolder.img);
-        }
+
+        contactViewHolder.img.setImageUrl(post.getImageURL(), mImageLoader);
+
 
         contactViewHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +120,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
 
         protected TextView postDetail;
         protected TextView author;
-        protected ImageView img;
+        protected NetworkImageView img;
         protected CardView card;
 
         public ContactViewHolder(View v) {
@@ -127,7 +128,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
 
             postDetail =  (TextView) v.findViewById(R.id.group_text);
             author = (TextView) v.findViewById(R.id.groupname);
-            img = (ImageView) v.findViewById(R.id.group_pic);
+            img = (NetworkImageView) v.findViewById(R.id.group_pic);
             card = (CardView) v.findViewById(R.id.group_card);
 
         }

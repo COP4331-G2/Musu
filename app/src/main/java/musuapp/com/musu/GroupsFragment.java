@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,6 +63,7 @@ public class GroupsFragment extends Fragment {
     ImageView iv;
     FloatingActionButton cPost;
     SharedPreferences access;
+    SwipeRefreshLayout refresh;
 
     List<Post> results;
 
@@ -73,6 +75,8 @@ public class GroupsFragment extends Fragment {
 
         this.inflatedView = inflater.inflate(R.layout.groups_fragment, container, false);
         results = new ArrayList<Post>();
+
+        refresh = inflatedView.findViewById(R.id.swipeRefreshLayout);
 
         overlay = inflatedView.findViewById(R.id.overlay_group);
         overlay.setVisibility(View.GONE);
@@ -94,6 +98,22 @@ public class GroupsFragment extends Fragment {
                 r.setLayoutFrozen(false);
                 cPost.setVisibility(View.VISIBLE);
                 overlay.setVisibility(View.GONE);
+            }
+        });
+
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                // Clear old data
+                results.clear();
+                adapter.notifyDataSetChanged();
+
+                // Get new data
+                getPosts();
+
+                // Reset
+                refresh.setRefreshing(false);
             }
         });
 

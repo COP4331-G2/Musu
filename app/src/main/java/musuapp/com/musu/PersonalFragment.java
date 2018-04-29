@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class PersonalFragment extends Fragment {
     public static final String TAG = PersonalFragment.class.getSimpleName();
     View inflatedView;
     View overlay;
+    SwipeRefreshLayout refresh;
     ImageView iv;
     FloatingActionButton cPost;
     ArrayList<Post> results;
@@ -49,6 +51,8 @@ public class PersonalFragment extends Fragment {
         this.inflatedView = inflater.inflate(R.layout.personal_fragment, container, false);
 
         final RecyclerView rv = inflatedView.findViewById(R.id.list_Postpersonal);
+
+        refresh = inflatedView.findViewById(R.id.swipeRefreshLayout);
 
         overlay = inflatedView.findViewById(R.id.overlay_personal);
         overlay.setVisibility(View.GONE);
@@ -69,6 +73,22 @@ public class PersonalFragment extends Fragment {
                 r.setLayoutFrozen(false);
                 cPost.setVisibility(View.VISIBLE);
                 overlay.setVisibility(View.GONE);
+            }
+        });
+
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                // Clear old data
+                results.clear();
+                adapter.notifyDataSetChanged();
+
+                // Get new data
+                getPosts();
+
+                // Reset
+                refresh.setRefreshing(false);
             }
         });
 

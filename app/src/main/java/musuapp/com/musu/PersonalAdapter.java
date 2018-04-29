@@ -26,8 +26,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.*;
 
 import org.json.JSONArray;
@@ -56,6 +58,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
     private static Activity fragment;
     private FloatingActionButton cPost;
     private static String userToken;
+    private ImageLoader mImageLoader = AppController.getInstance().getImageLoader();
     private static int userID;
 
     public PersonalAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost, int userID)
@@ -88,11 +91,14 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         contactViewHolder.like.setChecked(post.getIsLiked());
         post.setUserID(PersonalAdapter.userID);
 
-        try {
-            Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
-        } catch (Exception e) {
-            Picasso.with(context).load(R.drawable.image_not_found).into(contactViewHolder.img);
-        }
+        contactViewHolder.img.setImageUrl(post.getImageURL(), mImageLoader);
+
+
+        //try {
+        //    Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
+        //} catch (Exception e) {
+        //    Picasso.with(context).load(R.drawable.image_not_found).into(contactViewHolder.img);
+        //}
 
         //This function displays the tags. when pass true also pass the len of how many tags you want to show plus the ellipse.
         Utils.addTags(fragment, contactViewHolder.tagArea, (ArrayList<String>)post.getTags(), 5, true);
@@ -176,7 +182,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
         protected TextView postDetail;
         protected TextView author;
-        protected ImageView img;
+        protected NetworkImageView img;
         protected CheckBox like;
         protected CardView card;
         protected RelativeLayout tagArea;
@@ -186,7 +192,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
             postDetail =  (TextView) v.findViewById(R.id.personal_text);
             author = (TextView) v.findViewById(R.id.user_name);
-            img = (ImageView) v.findViewById(R.id.personal_pic);
+            img =  (NetworkImageView) v.findViewById(R.id.personal_pic);
             like =  (CheckBox) v.findViewById(R.id.like);
             card = (CardView) v.findViewById(R.id.personal_card);
             tagArea = (RelativeLayout) v.findViewById(R.id.tag_area);

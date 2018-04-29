@@ -23,6 +23,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -40,13 +42,14 @@ public class DetailPostView extends AppCompatActivity {
 
     @InjectView(R.id.detail_user) TextView author;
     @InjectView(R.id.detail_like) CheckBox likeBtn;
-    @InjectView(R.id.detail_img) ImageView postImg;
+    @InjectView(R.id.detail_img) NetworkImageView postImg;
     @InjectView(R.id.detail_text) TextView postText;
     ArrayList<String> tags;
     public static final String apiURL = "http://www.musuapp.com/API/API.php";
     public static final String TAG = DetailPostView.class.getSimpleName();
     public static Context context;
     private static String userToken;
+    private ImageLoader mImageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,10 @@ public class DetailPostView extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         context = getBaseContext();
 
+
         Bundle bundle = getIntent().getExtras();
+
+        mImageLoader = AppController.getInstance().getImageLoader();
 
         author   = findViewById(R.id.detail_user);
         likeBtn  = findViewById(R.id.detail_like);
@@ -97,11 +103,16 @@ public class DetailPostView extends AppCompatActivity {
         //Bitmap bitmap = BitmapFactory.decodeByteArray(bundle.getByteArray("post_image"), 0,bundle.getByteArray("post_image").length );
         //postImg.setImageBitmap(bitmap);
 
-        try {
-            Picasso.with(this).load(bundle.getString("post_image")).into(postImg);
-        } catch (Exception e) {
-            Picasso.with(this).load(R.drawable.image_not_found).into(postImg);
-        }
+
+        postImg.setImageUrl(bundle.getString("post_image"), mImageLoader);
+
+
+
+        //try {
+        //    Picasso.with(this).load(bundle.getString("post_image")).into(postImg);
+        //} catch (Exception e) {
+        //    Picasso.with(this).load(R.drawable.image_not_found).into(postImg);
+        //}
 
         tags = bundle.getStringArrayList("post_tags");
 

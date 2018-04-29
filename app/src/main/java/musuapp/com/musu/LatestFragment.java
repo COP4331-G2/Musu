@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +40,7 @@ public class LatestFragment extends Fragment {
     List<Post> results;
     LatestAdapter adapter;
     SharedPreferences access;
+    SwipeRefreshLayout refresh;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class LatestFragment extends Fragment {
 
         this.inflatedView = inflater.inflate(R.layout.latest_fragment, container, false);
         final RecyclerView rv = inflatedView.findViewById(R.id.list_Postlatest);
-
+        refresh = inflatedView.findViewById(R.id.swipeRefreshLayout);
         overlay = inflatedView.findViewById(R.id.overlay_latest);
         overlay.setVisibility(View.GONE);
         cPost = getActivity().findViewById(R.id.floatingActionButton2);
@@ -68,6 +70,22 @@ public class LatestFragment extends Fragment {
                 r.setLayoutFrozen(false);
                 cPost.setVisibility(View.VISIBLE);
                 overlay.setVisibility(View.GONE);
+            }
+        });
+
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                // Clear old data
+                results.clear();
+                adapter.notifyDataSetChanged();
+
+                // Get new data
+                getPosts();
+
+                // Reset
+                refresh.setRefreshing(false);
             }
         });
 
