@@ -1,7 +1,12 @@
 package musuapp.com.musu;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +14,9 @@ import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -17,14 +24,14 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import musuapp.com.musu.utils.Utils;
 
 public class DetailPostView extends AppCompatActivity {
 
-    @InjectView(R.id.groupname) TextView author;
-    @InjectView(R.id.like) CheckBox likeBtn;
-    @InjectView(R.id.post_img) ImageView postImg;
-    @InjectView(R.id.group_text) TextView postText;
-    @InjectView(R.id.detail_tags) GridLayout tagArea;
+    @InjectView(R.id.detail_user) TextView author;
+    @InjectView(R.id.detail_like) CheckBox likeBtn;
+    @InjectView(R.id.detail_img) ImageView postImg;
+    @InjectView(R.id.detail_text) TextView postText;
     ArrayList<String> tags;
 
     @Override
@@ -36,35 +43,109 @@ public class DetailPostView extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        author   = findViewById(R.id.groupname);
-        likeBtn  = findViewById(R.id.like);
-        postImg  = findViewById(R.id.post_img);
-        postText = findViewById(R.id.group_text);
-        tagArea  = findViewById(R.id.detail_tags);
+        author   = findViewById(R.id.detail_user);
+        likeBtn  = findViewById(R.id.detail_like);
+        postImg  = findViewById(R.id.detail_img);
+        postText = findViewById(R.id.detail_text);
 
         author.setText(bundle.getString("author"));
+        likeBtn.setChecked(bundle.getBoolean("like"));
         postText.setText(bundle.getString("post_text"));
         //Bitmap bitmap = BitmapFactory.decodeByteArray(bundle.getByteArray("post_image"), 0,bundle.getByteArray("post_image").length );
         //postImg.setImageBitmap(bitmap);
         Picasso.with(this).load(bundle.getString("post_image")).into(postImg);
         tags = bundle.getStringArrayList("post_tags");
 
-        for(int i = 0; i < tags.size(); i++){
-            TextView temp = new TextView(this);
-            temp.setText(tags.get(i));
-            temp.setBackgroundResource(R.drawable.tag_view);
-            temp.setElevation(5);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10,10,10,10);
-            temp.setLayoutParams(params);
-            //pTags.add(temp);
-            tagArea.addView(temp);
+        //This function displays the tags. when pass false also pass the len of the array. this will print all the tags .
+        Utils.addTags(this, (RelativeLayout)findViewById(R.id.detail_tags), tags, tags.size(), false);
+
+
+
+    }
+
+    public void addTags(){
+
+        int counter = 0;
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        final RelativeLayout wrapper = (RelativeLayout) findViewById(R.id.detail_tags);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        //int id = 0;
+        wrapper.removeAllViews();
+
+        int currCounter = 0;
+        int currWidth = 0;
+        boolean isNewLine = false;
+        boolean firstLine = false;
+
+        for(int id = 0; id < tags.size(); id++){
+            String text = tags.get(id);
+            TextView tag = new TextView(DetailPostView.this);
+            RelativeLayout.LayoutParams rlp1 = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            rlp1.setMargins(10, 10,10,20);
+            tag.setText(text.trim());
+            tag.setTextSize(16);
+            tag.setTextColor(getResources().getColor(R.color.black));
+            tag.setId(4000+id);
+            tag.setElevation(5);
+            tag.setBackgroundResource(R.drawable.tag_view);
+            tag.measure(0,0);
+
+            //tag.setMaxLines(1);
+
+            int width =  tag.getMeasuredWidth();//text.length()*15;
+
+            Log.i("WIDTH OF TAG", String.valueOf(width));
+
+            if((currWidth+width + 100)<= screenWidth)
+            {
+                currWidth += width ;
+                isNewLine = false;
+                currCounter++;
+            }
+            else{
+                currWidth = width;
+                firstLine = false ;
+                isNewLine = true;
+                currCounter = 1;
+            }
+
+            if(id == 0)
+            {     rlp1.addRule(RelativeLayout.ALIGN_START);
+                tag.setLayoutParams(rlp1);
+                wrapper.addView(tag);
+            }
+            else if(isNewLine){
+                rlp1.addRule(RelativeLayout.ALIGN_LEFT);
+                rlp1.addRule(RelativeLayout.BELOW,4000-1+id );
+                tag.setLayoutParams(rlp1);
+                wrapper.addView(tag);
+            }
+            else if(firstLine)
+            {
+                rlp1.addRule(RelativeLayout.RIGHT_OF,4000-1+id );
+                tag.setLayoutParams(rlp1);
+                wrapper.addView(tag);
+
+            }
+            else{
+
+                rlp1.addRule(RelativeLayout.RIGHT_OF,4000-1+id );
+                rlp1.addRule(RelativeLayout.BELOW,4000-currCounter+id );
+                tag.setLayoutParams(rlp1);
+                wrapper.addView(tag);
+
+            }
+            //id++;
         }
+    }
 
+    public void likeClick(View view){
 
-
-
-
+        // Here talk to API to save the value of this field.
+        Toast.makeText(this, "the value is "+String.valueOf(likeBtn.isChecked()),Toast.LENGTH_SHORT);
 
     }
 

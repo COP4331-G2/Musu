@@ -35,7 +35,7 @@ public class PersonalFragment extends Fragment {
     View overlay;
     ImageView iv;
     FloatingActionButton cPost;
-    List<Post> results;
+    ArrayList<Post> results;
     PersonalAdapter adapter;
     SharedPreferences access;
 

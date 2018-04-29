@@ -49,8 +49,8 @@ public class LatestAdapter extends RecyclerView.Adapter<LatestAdapter.ContactVie
     @Override
     public void onBindViewHolder(final ContactViewHolder contactViewHolder, int i) {
         final Post post = postList.get(i);
-
-        Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
+        if(!post.getImageURL().isEmpty())
+            Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
 
         contactViewHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +78,7 @@ public class LatestAdapter extends RecyclerView.Adapter<LatestAdapter.ContactVie
                 recyclerView.setLayoutFrozen(true);
                 cPost.setVisibility(View.GONE);
 
-                return false;
+                return true;
             }
         });
 

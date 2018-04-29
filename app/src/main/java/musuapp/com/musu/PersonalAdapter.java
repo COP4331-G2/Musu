@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.GridLayout;
+import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,6 +40,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import musuapp.com.musu.utils.*;
+
 /**
  * Provide views to RecyclerView with data from mDataSet.
  */
@@ -63,14 +66,6 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         this.cPost = cPost;
         this.recyclerView = recyclerView;
 
-        /*RecyclerView.LayoutManager rvlm;
-        rvlm = new LinearLayoutManager(fragment);
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(rvlm);
-
-        recyclerView.setAdapter(this);*/
-
     }
     public void addPost(Post newPost)
     {
@@ -88,43 +83,13 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         contactViewHolder.postDetail.setText(post.getBodyText());
         contactViewHolder.author.setText(post.getUserName());
         contactViewHolder.like.setChecked(post.getIsLiked());
-        Picasso.with(context).load(post.getImageURL()).fit().into(contactViewHolder.img);
+        if(post.getImageURL().length()>0) {
+            Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
+        }
+        else{contactViewHolder.img.setVisibility(View.GONE); }
 
-        ArrayList<TextView> pTags = new ArrayList<TextView>();
-        int len = post.getTags().size();
-        int j = 0;
-        String s = "";
-       // while ( )
-
-            //Log.i("TAG", post.getTags().get(0).toString());
-
-            while( len > 0 && j < len && j < 4){
-                if((s = post.getTags().get(j))!= null) {
-                    //s = post.getTags().get(j);
-                    TextView temp = new TextView(context);
-                    temp.setText(s);
-                    temp.setBackgroundResource(R.drawable.tag_view);
-                    temp.setElevation(5);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-                    params.setMargins(10, 10, 10, 10);
-                    temp.setLayoutParams(params);
-                    //pTags.add(temp);
-                    contactViewHolder.tagArea.addView(temp);
-                }
-                j++;
-            }
-            if(len > 4){
-                TextView t = new TextView(context);
-                t.setText("...");
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-                params.setMargins(10,10,10,10);
-                //t.setGravity(View.TEXT_ALIGNMENT_TEXT_END);
-                t.setLayoutParams(params);
-                contactViewHolder.tagArea.addView(t);
-            }
-
-
-
+        //This function displays the tags. when pass true also pass the len of how many tags you want to show plus the ellipse.
+        Utils.addTags(fragment, contactViewHolder.tagArea, (ArrayList<String>)post.getTags(), 5, true);
 
 
         contactViewHolder.like.setOnClickListener(new View.OnClickListener() {
@@ -151,6 +116,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
                 Intent intent = new Intent(fragment, DetailPostView.class);
                 intent.putExtra("author", post.getUserName());
+                intent.putExtra("like", post.getIsLiked());
                 intent.putExtra("post_text", post.getBodyText());
                // Bitmap bit = ((BitmapDrawable)contactViewHolder.img.getDrawable()).getBitmap();
                 //ByteArrayOutputStream barray = new ByteArrayOutputStream();
@@ -278,8 +244,8 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         protected ImageView img;
         protected CheckBox like;
         protected CardView card;
-        protected GridLayout tagArea;
-
+        protected RelativeLayout tagArea;
+        protected int cardWidth;
         public ContactViewHolder(View v) {
             super(v);
 
@@ -288,7 +254,10 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
             img = (ImageView) v.findViewById(R.id.personal_pic);
             like =  (CheckBox) v.findViewById(R.id.like);
             card = (CardView) v.findViewById(R.id.personal_card);
-            tagArea = (GridLayout) v.findViewById(R.id.tag_area);
+            tagArea = (RelativeLayout) v.findViewById(R.id.tag_area);
+
+            tagArea.measure(0,0);
+            cardWidth = tagArea.getMeasuredWidth();
 
         }
 
