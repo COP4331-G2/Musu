@@ -15,7 +15,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:selectAllOnFocus="true"
-        android:text="First Name"
+        android:hint="@string/first_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,23 +31,39 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:selectAllOnFocus="true"
-        android:text="Last Name"
+        android:hint="@string/last_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_firstname" />
 
     <EditText
-        android:id="@+id/input_password"
+        android:id="@+id/input_username"
         android:layout_width="wrap_content"
-        android:layout_height="46dp"
+        android:layout_height="49dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="25dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="text"
         android:selectAllOnFocus="true"
-        android:text="Password"
+        android:hint="@string/username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_lastname" />
+
+    <EditText
+        android:id="@+id/input_password"
+        android:layout_width="wrap_content"
+        android:layout_height="49dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:selectAllOnFocus="true"
+        android:hint="@string/password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,30 +72,30 @@
     <EditText
         android:id="@+id/input_verify_password"
         android:layout_width="wrap_content"
-        android:layout_height="46dp"
+        android:layout_height="49dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="25dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:selectAllOnFocus="true"
-        android:text="Verify Password"
+        android:hint="@string/verify_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_password" />
 
     <EditText
-        android:id="@+id/input_email"
+        android:id="@+id/input_emailaddress"
         android:layout_width="wrap_content"
-        android:layout_height="46dp"
+        android:layout_height="49dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="25dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         android:selectAllOnFocus="true"
-        android:text="Email Address"
+        android:hint="@string/email_address"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,10 +108,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="25dp"
-        android:text="Sign Up"
+        android:text="@string/sign_up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_email" />
+        app:layout_constraintTop_toBottomOf="@+id/input_emailaddress" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline8"
@@ -103,17 +119,4 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="20dp" />
-
-    <EditText
-        android:id="@+id/input_username"
-        android:layout_width="215dp"
-        android:layout_height="49dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="25dp"
-        android:selectAllOnFocus="true"
-        android:text="Username"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_lastname" />
 </android.support.constraint.ConstraintLayout>

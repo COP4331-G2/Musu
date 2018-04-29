@@ -61,7 +61,11 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
         contactViewHolder.postDetail.setText(post.getBodyText());
         contactViewHolder.author.setText(post.getUserName());
         //contactViewHolder.like.setChecked(false);
-        Picasso.with(context).load(post.getImageURL()).fit().into(contactViewHolder.img);
+        try {
+            Picasso.with(context).load(post.getImageURL()).fit().into(contactViewHolder.img);
+        } catch (Exception e) {
+            Picasso.with(context).load(R.drawable.image_not_found).into(contactViewHolder.img);
+        }
 
         contactViewHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override

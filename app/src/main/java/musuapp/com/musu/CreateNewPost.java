@@ -1,16 +1,20 @@
 package musuapp.com.musu;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,6 +54,8 @@ public class CreateNewPost extends AppCompatActivity {
     public static final String TAG = CreateNewPost.class.getSimpleName();
     static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int PICK_IMAGE = 2;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1000;
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1001;
     String currentPhotoPath;
     String cloudinaryLink = "";
     private EditText bodyText;
@@ -58,9 +64,7 @@ public class CreateNewPost extends AppCompatActivity {
     SharedPreferences access;
     private ProgressDialog progressDialog;
     private ProgressBar suggest_loader;
-
-
-
+    private View createNewPostView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +123,38 @@ public class CreateNewPost extends AppCompatActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+        }
+    }
+
+    public void checkCameraPermissions(View view) {
+        // Check to see if CAMERA permission has been granted first
+        if (ContextCompat.checkSelfPermission(CreateNewPost.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+            // Save the view into a global variable
+            createNewPostView = view;
+
+            // If the permission has NOT already been granted, request the permissions
+            ActivityCompat.requestPermissions(CreateNewPost.this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+        } else {
+            // If the permission has already been granted
+
+            takePicture(view);
+        }
+    }
+
+    public void checkReadExternalStoragePermissions(View view) {
+        // Check to see if READ_EXTERNAL_STORAGE permission has been granted first
+        if (ContextCompat.checkSelfPermission(CreateNewPost.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            // Save the view into a global variable
+            createNewPostView = view;
+
+            // If the permission has NOT already been granted, request the permissions
+            ActivityCompat.requestPermissions(CreateNewPost.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        } else {
+            // If the permission has already been granted
+
+            chosePicture(view);
         }
     }
 
@@ -271,24 +307,25 @@ public class CreateNewPost extends AppCompatActivity {
             // Get the body text from bodyText
             String bodyText = this.bodyText.getText().toString();
 
-            // Get the tags
-            String tags = "[" + this.tags.getText().toString() + "]";
-
             // Volley call that will send imageURL to API
             String token = access.getString("token", "");
             Integer userID = access.getInt("userID", -1);
 
-            // Build a map with the parameters I want to send to server
-            Map<String, String> postParam = new HashMap<String, String>();
-            postParam.put("function", "createPost");
-            postParam.put("imageURL", cloudinaryLink);
-            postParam.put("bodyText", bodyText);
-            postParam.put("userID", userID.toString());
-            postParam.put("token", token);
-            postParam.put("tags", tags);
-
             // JSON Object to send to the server
-            JSONObject parameters = new JSONObject(postParam);
+            JSONObject parameters = new JSONObject();
+
+            try {
+                parameters.put("function", "createPost");
+                parameters.put("imageURL", cloudinaryLink);
+                parameters.put("bodyText", bodyText);
+                parameters.put("userID", userID);
+                parameters.put("token", token);
+                parameters.put("tags", new JSONArray(this.tags.getText().toString().split(",")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Log.e("JSON Payload", parameters.toString());
 
             // Building the actual request
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiURL, parameters,
@@ -423,6 +460,48 @@ public class CreateNewPost extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    takePicture(createNewPostView);
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    chosePicture(createNewPostView);
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
         }
     }
 }

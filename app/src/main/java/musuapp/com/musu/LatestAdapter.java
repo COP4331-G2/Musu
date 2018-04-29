@@ -49,8 +49,13 @@ public class LatestAdapter extends RecyclerView.Adapter<LatestAdapter.ContactVie
     @Override
     public void onBindViewHolder(final ContactViewHolder contactViewHolder, int i) {
         final Post post = postList.get(i);
-        if(!post.getImageURL().isEmpty())
+
+
+        try {
             Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
+        } catch (Exception e) {
+            Picasso.with(context).load(R.drawable.image_not_found).into(contactViewHolder.img);
+        }
 
         contactViewHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override

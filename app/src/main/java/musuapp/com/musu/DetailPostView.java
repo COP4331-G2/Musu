@@ -53,7 +53,13 @@ public class DetailPostView extends AppCompatActivity {
         postText.setText(bundle.getString("post_text"));
         //Bitmap bitmap = BitmapFactory.decodeByteArray(bundle.getByteArray("post_image"), 0,bundle.getByteArray("post_image").length );
         //postImg.setImageBitmap(bitmap);
-        Picasso.with(this).load(bundle.getString("post_image")).into(postImg);
+
+        try {
+            Picasso.with(this).load(bundle.getString("post_image")).into(postImg);
+        } catch (Exception e) {
+            Picasso.with(this).load(R.drawable.image_not_found).into(postImg);
+        }
+
         tags = bundle.getStringArrayList("post_tags");
 
         //This function displays the tags. when pass false also pass the len of the array. this will print all the tags .

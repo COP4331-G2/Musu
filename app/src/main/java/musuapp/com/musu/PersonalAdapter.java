@@ -83,10 +83,12 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         contactViewHolder.postDetail.setText(post.getBodyText());
         contactViewHolder.author.setText(post.getUserName());
         contactViewHolder.like.setChecked(post.getIsLiked());
-        if(post.getImageURL().length()>0) {
+
+        try {
             Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
+        } catch (Exception e) {
+            Picasso.with(context).load(R.drawable.image_not_found).into(contactViewHolder.img);
         }
-        else{contactViewHolder.img.setVisibility(View.GONE); }
 
         //This function displays the tags. when pass true also pass the len of how many tags you want to show plus the ellipse.
         Utils.addTags(fragment, contactViewHolder.tagArea, (ArrayList<String>)post.getTags(), 5, true);
@@ -135,7 +137,13 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
                 fragment.findViewById(R.id.overlay_personal).setVisibility(View.VISIBLE);
                 ImageView imgOver = fragment.findViewById(R.id.imgOverlaypersonal);
                 //imgOver.setImageDrawable(contactViewHolder.img.getDrawable());
-                Picasso.with(context).load(post.getImageURL()).into(imgOver);
+
+                try {
+                    Picasso.with(context).load(post.getImageURL()).into(imgOver);
+                } catch (Exception e) {
+                    Picasso.with(context).load(R.drawable.image_not_found).into(imgOver);
+                }
+
                 recyclerView.setLayoutFrozen(true);
                 cPost.setVisibility(View.GONE);
 
@@ -245,7 +253,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         protected CheckBox like;
         protected CardView card;
         protected RelativeLayout tagArea;
-        protected int cardWidth;
+
         public ContactViewHolder(View v) {
             super(v);
 
@@ -255,9 +263,6 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
             like =  (CheckBox) v.findViewById(R.id.like);
             card = (CardView) v.findViewById(R.id.personal_card);
             tagArea = (RelativeLayout) v.findViewById(R.id.tag_area);
-
-            tagArea.measure(0,0);
-            cardWidth = tagArea.getMeasuredWidth();
 
         }
 

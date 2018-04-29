@@ -13,6 +13,6 @@
         android:layout_height="match_parent"
         android:layout_margin="3dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         app:srcCompat="@color/iron" />
 </android.support.v7.widget.CardView>
