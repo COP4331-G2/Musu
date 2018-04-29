@@ -64,6 +64,7 @@ public class SettingsFragment extends Fragment {
                 {
                     Toast toast = Toast.makeText(getContext(),"Passwords do not match", Toast.LENGTH_LONG);
                     toast.show();
+                    return;
 
                 }
 
