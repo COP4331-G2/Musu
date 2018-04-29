@@ -35,8 +35,10 @@ import musuapp.com.musu.R;
 
 public class Utils {
 
-    public static void LikeOrUnlikeImage(final Context context, final String TAG, String postID, String userID, String userToken, String apiURL, boolean like)
+    public static void LikeOrUnlikeImage(final Post post, String userToken, String apiURL, final Context context, final String TAG, boolean like)
     {
+        String postID = Integer.toString(post.getPostID());
+        String userID = Integer.toString(post.getUserID());
 
 
         // Build a map with the parameters I want to send to server
@@ -71,7 +73,7 @@ public class Utils {
                             if(responseSuccess)
                             {
                                 Toast toast = Toast.makeText(context,responseText, Toast.LENGTH_LONG);
-                                //post.setLiked(responseText);
+                                post.setLiked(responseText);
                                 toast.show();
                             }
 

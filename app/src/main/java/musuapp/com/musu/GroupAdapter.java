@@ -3,6 +3,7 @@ package musuapp.com.musu;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -28,9 +29,14 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
     private RecyclerView recyclerView;
     private Activity fragment;
     private FloatingActionButton cPost;
+    private static int userID;
+    private static String userToken;
 
-    public GroupAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost)
+    public GroupAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost, int userID)
     {
+        SharedPreferences token = context.getSharedPreferences("Login", Context.MODE_PRIVATE);
+        this.userToken = token.getString("token", "null");
+        this.userID  = userID;
         this.postList = posts;
         this.context = context;
         this.fragment = fragment;
@@ -73,6 +79,9 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
 
                 Intent intent = new Intent(fragment, DetailPostView.class);
                 intent.putExtra("author", post.getUserName());
+                intent.putExtra("userID", GroupAdapter.userID);
+                intent.putExtra("postID", post.getPostID());
+                intent.putExtra("token", userToken);
                 intent.putExtra("post_text", post.getBodyText());
                 intent.putExtra("post_image", post.getImageURL());
                 intent.putStringArrayListExtra("post_tags", (ArrayList<String>) post.getTags());

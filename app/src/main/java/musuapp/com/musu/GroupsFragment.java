@@ -81,7 +81,7 @@ public class GroupsFragment extends Fragment {
         iv = inflatedView.findViewById(R.id.imgOverlay_group);
 
         rv = inflatedView.findViewById(R.id.list_Post);
-        adapter = new GroupAdapter(getContext(), rv, getActivity(), results, cPost );
+        adapter = new GroupAdapter(getContext(), rv, getActivity(), results, cPost, access.getInt("userID", -1));
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setAdapter(adapter);
 

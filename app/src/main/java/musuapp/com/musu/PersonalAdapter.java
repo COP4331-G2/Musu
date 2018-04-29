@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
+import musuapp.com.musu.utils.Utils;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -55,8 +56,9 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
     private static Activity fragment;
     private FloatingActionButton cPost;
     private static String userToken;
+    private static int userID;
 
-    public PersonalAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost)
+    public PersonalAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost, int userID)
     {
         SharedPreferences token = context.getSharedPreferences("Login", Context.MODE_PRIVATE);
         this.userToken = token.getString("token", "null");
@@ -65,6 +67,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         this.fragment = fragment;
         this.cPost = cPost;
         this.recyclerView = recyclerView;
+        this.userID = userID;
 
     }
     public void addPost(Post newPost)
@@ -83,6 +86,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         contactViewHolder.postDetail.setText(post.getBodyText());
         contactViewHolder.author.setText(post.getUserName());
         contactViewHolder.like.setChecked(post.getIsLiked());
+        post.setUserID(PersonalAdapter.userID);
 
         try {
             Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
@@ -99,12 +103,12 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
             public void onClick(View v) {
                 if(contactViewHolder.like.isChecked() == true){
                     // like button is now checked
-                    PersonalAdapter.LikeOrUnlikeImage(post, true);
+                    Utils.LikeOrUnlikeImage(post, PersonalAdapter.userToken, apiURL, PersonalAdapter.context, TAG, true);
                     // api call to like post for user
 
                 } else {
                     // like button is now unchecked
-                    PersonalAdapter.LikeOrUnlikeImage(post, false);
+                    Utils.LikeOrUnlikeImage(post, PersonalAdapter.userToken, apiURL, PersonalAdapter.context, TAG, false);
                     // api call to dislike post for user
 
                 }
@@ -120,6 +124,10 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
                 intent.putExtra("author", post.getUserName());
                 intent.putExtra("like", post.getIsLiked());
                 intent.putExtra("post_text", post.getBodyText());
+                intent.putExtra("userID", PersonalAdapter.userID);
+                intent.putExtra("postID", post.getPostID());
+                intent.putExtra("token", userToken);
+
                // Bitmap bit = ((BitmapDrawable)contactViewHolder.img.getDrawable()).getBitmap();
                 //ByteArrayOutputStream barray = new ByteArrayOutputStream();
                 //bit.compress(Bitmap.CompressFormat.PNG, 50, barray);
@@ -158,70 +166,6 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         final List<TextView> personalTags = new ArrayList<>();
 
         return null;
-    }
-    public static void LikeOrUnlikeImage(final Post post, boolean like)
-    {
-        String postID = Integer.toString(post.getPostID());
-        String userID = Integer.toString(post.getUserID());
-
-
-        // Build a map with the parameters I want to send to server
-        Map<String, String> postParam = new HashMap<String, String>();
-
-        if(like) postParam.put("function", "likePost");
-        else postParam.put("function", "unlikePost");
-
-        postParam.put("userID", userID);
-        postParam.put("postID", postID);
-        postParam.put("token", PersonalAdapter.userToken);
-
-        // JSON Object to send to the server
-        JSONObject parameters = new JSONObject(postParam);
-
-        // Building the actual request
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiURL, parameters,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // Logic goes here
-
-
-                        try{
-                            // Declare objects
-                            //List<Post> results = new ArrayList<Post>();
-
-                            // Get the JSON Array with the Posts
-                            boolean responseSuccess = (boolean)response.get("success");
-                            String responseText = (String)response.get("message");
-                            if(responseSuccess)
-                            {
-                                Toast toast = Toast.makeText(context,responseText, Toast.LENGTH_LONG);
-                                post.setLiked(responseText);
-                                toast.show();
-                            }
-
-                            // Create the adapter with the list
-                            //adapter = new MyAdapter(rv, getActivity(), results);
-
-
-                        } catch (JSONException e){
-                            Log.e(TAG, e.toString());
-                        }
-                    }
-
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Print VolleyLog to the console
-                VolleyLog.e(TAG, "Error: " + error.getMessage());
-            }
-        }); // !! The request building of "jsonObjReq" ends here !!
-
-        // Add the Request to the queue and execute
-        AppController.getInstance().addToRequestQueue(jsonObjReq, "json_obj_req");
-
     }
 
 

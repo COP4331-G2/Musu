@@ -3,6 +3,7 @@ package musuapp.com.musu;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.CardView;
@@ -27,13 +28,18 @@ public class LatestAdapter extends RecyclerView.Adapter<LatestAdapter.ContactVie
     private RecyclerView recyclerView;
     private Activity fragment;
     private FloatingActionButton cPost;
+    private static int userID;
+    private static String userToken;
 
-    public LatestAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost) {
+    public LatestAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost, int userID) {
+        SharedPreferences token = context.getSharedPreferences("Login", Context.MODE_PRIVATE);
         this.postList = posts;
         this.context = context;
         this.fragment = fragment;
         this.cPost = cPost;
         this.recyclerView = recyclerView;
+        this.userID = userID;
+        this.userToken = token.getString("token", "null");
     }
 
     public void addPost(Post newPost)
@@ -63,6 +69,9 @@ public class LatestAdapter extends RecyclerView.Adapter<LatestAdapter.ContactVie
 
                 Intent intent = new Intent(fragment, DetailPostView.class);
                 intent.putExtra("author", post.getUserName());
+                intent.putExtra("userID", LatestAdapter.userID);
+                intent.putExtra("postID", post.getPostID());
+                intent.putExtra("token", userToken);
                 intent.putExtra("post_text", post.getBodyText());
                 // Bitmap bit = ((BitmapDrawable)contactViewHolder.img.getDrawable()).getBitmap();
                 //ByteArrayOutputStream barray = new ByteArrayOutputStream();
@@ -94,6 +103,9 @@ public class LatestAdapter extends RecyclerView.Adapter<LatestAdapter.ContactVie
                 Intent intent = new Intent(fragment, DetailPostView.class);
                 intent.putExtra("author", post.getUserName());
                 intent.putExtra("post_text", post.getBodyText());
+                intent.putExtra("userID", LatestAdapter.userID);
+                intent.putExtra("postID", post.getPostID());
+                intent.putExtra("token", userToken);
                 // Bitmap bit = ((BitmapDrawable)contactViewHolder.img.getDrawable()).getBitmap();
                 //ByteArrayOutputStream barray = new ByteArrayOutputStream();
                 //bit.compress(Bitmap.CompressFormat.PNG, 50, barray);

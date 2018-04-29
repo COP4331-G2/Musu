@@ -37,7 +37,7 @@ public class PersonalFragment extends Fragment {
     FloatingActionButton cPost;
     ArrayList<Post> results;
     PersonalAdapter adapter;
-    SharedPreferences access;
+    static SharedPreferences access;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class PersonalFragment extends Fragment {
         cPost.setVisibility(overlay.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
         iv = inflatedView.findViewById(R.id.imgOverlaypersonal);
         // implements these lines after volley code is implemented
-        adapter = new PersonalAdapter(getContext(), rv, getActivity(), results, cPost);
+        adapter = new PersonalAdapter(getContext(), rv, getActivity(), results, cPost, access.getInt("userID", -1));
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(adapter);
 

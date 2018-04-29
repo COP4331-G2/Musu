@@ -55,7 +55,7 @@ public class LatestFragment extends Fragment {
         cPost.setVisibility(overlay.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
         iv = inflatedView.findViewById(R.id.imgOverlaylatest);
 
-        adapter = new LatestAdapter(getContext(), rv, getActivity(), results, cPost);
+        adapter = new LatestAdapter(getContext(), rv, getActivity(), results, cPost, access.getInt("userID", -1));
         rv.setLayoutManager(new GridLayoutManager(getContext(), 4));
         rv.setAdapter(adapter);
 
