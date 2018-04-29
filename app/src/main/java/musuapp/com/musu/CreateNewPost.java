@@ -97,6 +97,8 @@ public class CreateNewPost extends AppCompatActivity {
         tags.addTextChangedListener(commaPressed);
     }
 
+
+    // grabs the tags written from textedit and save it to the array and call the createTags().
     TextWatcher commaPressed = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -157,13 +159,14 @@ public class CreateNewPost extends AppCompatActivity {
             tag.setTextSize(16);
             tag.setTextColor(getResources().getColor(R.color.black));
             tag.setId(4000+id);
-            tag.setElevation(3);
-            tag.setBackgroundResource(R.drawable.tag_create);
+            tag.setElevation(10);
+            tag.setBackgroundResource(R.drawable.tag_view);
             tag.measure(0,0);
             final int index = id;
             tag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Toast.makeText(CreateNewPost.this, "Tag: "+tagList.get(index)+" has been remove.", Toast.LENGTH_SHORT);
                     tagList.remove(index);
                     createTags();
                 }
@@ -385,8 +388,8 @@ public class CreateNewPost extends AppCompatActivity {
 
                             try {
                                 // Declare objects
-                                String tempTag;
-                                String tagList = "";
+                                //String tempTag;
+                                //String tagList = "";
 
                                 // Get the JSON Array with the Posts
                                 JSONArray jsonArray = response.getJSONArray("results");
@@ -394,17 +397,20 @@ public class CreateNewPost extends AppCompatActivity {
                                 // Parse through the json array
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     // Get the String
-                                    tempTag = jsonArray.getString(i);
+                                   // tempTag = jsonArray.getString(i);
 
                                     // Create a total String
-                                    tagList = tagList + tempTag + ", ";
+                                    //tagList = tagList + tempTag + ", ";
+
+                                    tagList.add(jsonArray.getString(i));
                                 }
 
                                 // Add the text to the editText
-                                tags.setText(tagList);
+                                //tags.setText(tagList);
 
                                 suggest_loader.setVisibility(View.INVISIBLE);
-
+                                Log.i("SUGGESTED TAGS", tagList.toString());
+                                createTags();
 
                             } catch (JSONException e) {
                                 Log.e(TAG, e.toString());
@@ -454,7 +460,9 @@ public class CreateNewPost extends AppCompatActivity {
                 parameters.put("bodyText", bodyText);
                 parameters.put("userID", userID);
                 parameters.put("token", token);
-                parameters.put("tags", new JSONArray(this.tags.getText().toString().split(",")));
+                parameters.put("tags", new JSONArray(tagList));
+
+                        //this.tags.getText().toString().split(",")));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -4,142 +4,188 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/detailBgdColor"
     android:focusable="true"
     android:focusableInTouchMode="true"
     tools:context="musuapp.com.musu.CreateNewPost">
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="178dp"
-        android:layout_height="120dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:adjustViewBounds="true"
-        android:background="@android:color/background_light"
-        android:onClick="checkCameraPermissions"
-        android:scaleType="fitCenter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/take_picture_img" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:onClick="createPost"
-        android:text="@string/new_post_submit_button"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="sans-serif"
-        android:text="@string/new_post_take_pic"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
-
-    <Button
-        android:id="@+id/button_gallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:onClick="checkReadExternalStoragePermissions"
-        android:text="@string/new_post_gallery_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="359dp"
-        android:layout_height="53dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:ems="10"
-        android:hint="@string/new_post_caption"
-        android:inputType="textPersonName"
-        android:textColor="@color/jet"
-        android:textCursorDrawable="?android:attr/textCursorDrawable"
-        android:textDirection="ltr"
-        app:layout_constraintBottom_toTopOf="@+id/postTags"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="720dp"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="471dp">
 
-    <EditText
-        android:id="@+id/postTags"
-        style="@android:style/Widget.TextView"
-        android:layout_width="357dp"
-        android:layout_height="47dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:ems="10"
-        android:hint="Seperate tags with commas"
-        android:inputType="text"
-        android:textColor="@color/jet"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="278dp"
+                android:layout_height="220dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/background_light"
+                android:onClick="checkCameraPermissions"
+                android:scaleType="fitCenter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/take_picture_img" />
 
-    <Button
-        android:id="@+id/suggest_tags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:onClick="suggestTags"
-        android:text="Suggest Tags"
-        app:layout_constraintBottom_toBottomOf="@+id/button"
-        app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/new_post_take_pic"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageButton" />
 
-    <ProgressBar
-        android:id="@+id/suggest_loader"
-        style="@android:style/Widget.ProgressBar.Large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:indeterminate="true"
-        android:indeterminateDrawable="@drawable/spinner_loader"
-        android:max="1"
-        android:progress="1"
-        android:progressDrawable="@mipmap/doge_round"
-        android:progressTint="@color/primary_dark"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/suggest_tags" />
+            <Button
+                android:id="@+id/button_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/detail_text_bg"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:elevation="3dp"
+                android:onClick="checkReadExternalStoragePermissions"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/new_post_gallery_button"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/textView2"
+                app:layout_constraintStart_toStartOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <RelativeLayout
-        android:id="@+id/create_tags"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_gallery">
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@android:color/holo_blue_bright"
+                android:ems="10"
+                android:hint="@string/new_post_caption"
+                android:inputType="textMultiLine"
+                android:minHeight="47dp"
+                android:textColor="@color/jet"
+                android:textCursorDrawable="?android:attr/textCursorDrawable"
+                android:textDirection="ltr"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_gallery" />
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/postTags"
+                style="@android:style/Widget.TextView"
+                android:layout_width="0dp"
+                android:layout_height="47dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@android:color/holo_blue_bright"
+                android:ems="10"
+                android:hint="Seperate tags with commas"
+                android:inputType="text"
+                android:textColor="@color/jet"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/suggest_tags"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText2" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/detail_text_bg"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:elevation="3dp"
+                android:onClick="createPost"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/new_post_submit_button"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/create_tags" />
+
+            <ProgressBar
+                android:id="@+id/suggest_loader"
+                style="@android:style/Widget.ProgressBar.Large"
+                android:layout_width="47dp"
+                android:layout_height="47dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/spinner_loader"
+                android:max="1"
+                android:progress="1"
+                android:progressDrawable="@mipmap/doge_round"
+                android:progressTint="@color/primary_dark"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/postTags"
+                app:layout_constraintEnd_toEndOf="@+id/postTags"
+                app:layout_constraintHorizontal_bias="0.9"
+                app:layout_constraintStart_toStartOf="@+id/postTags"
+                app:layout_constraintTop_toTopOf="@+id/postTags" />
+
+            <Button
+                android:id="@+id/suggest_tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/detail_text_bg"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:elevation="3dp"
+                android:onClick="suggestTags"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Suggest Tags"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/postTags"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/postTags" />
+
+            <RelativeLayout
+                android:id="@+id/create_tags"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/postTags">
+
+            </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
