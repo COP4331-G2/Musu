@@ -3,6 +3,7 @@ package musuapp.com.musu;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -28,9 +31,15 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
     private RecyclerView recyclerView;
     private Activity fragment;
     private FloatingActionButton cPost;
+    private static int userID;
+    private static String userToken;
+    private ImageLoader mImageLoader = AppController.getInstance().getImageLoader();
 
-    public GroupAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost)
+    public GroupAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost, int userID)
     {
+        SharedPreferences token = context.getSharedPreferences("Login", Context.MODE_PRIVATE);
+        this.userToken = token.getString("token", "null");
+        this.userID  = userID;
         this.postList = posts;
         this.context = context;
         this.fragment = fragment;
@@ -61,11 +70,9 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
         contactViewHolder.postDetail.setText(post.getBodyText());
         contactViewHolder.author.setText(post.getUserName());
         //contactViewHolder.like.setChecked(false);
-        try {
-            Picasso.with(context).load(post.getImageURL()).fit().into(contactViewHolder.img);
-        } catch (Exception e) {
-            Picasso.with(context).load(R.drawable.image_not_found).into(contactViewHolder.img);
-        }
+
+        contactViewHolder.img.setImageUrl(post.getImageURL(), mImageLoader);
+
 
         contactViewHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,9 +80,13 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
 
                 Intent intent = new Intent(fragment, DetailPostView.class);
                 intent.putExtra("author", post.getUserName());
+                intent.putExtra("userID", GroupAdapter.userID);
+                intent.putExtra("postID", post.getPostID());
+                intent.putExtra("token", userToken);
                 intent.putExtra("post_text", post.getBodyText());
                 intent.putExtra("post_image", post.getImageURL());
                 intent.putStringArrayListExtra("post_tags", (ArrayList<String>) post.getTags());
+                intent.putExtra("like", post.getIsLiked());
                 fragment.startActivity(intent);
             }
         });
@@ -110,7 +121,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
 
         protected TextView postDetail;
         protected TextView author;
-        protected ImageView img;
+        protected NetworkImageView img;
         protected CardView card;
 
         public ContactViewHolder(View v) {
@@ -118,7 +129,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ContactViewH
 
             postDetail =  (TextView) v.findViewById(R.id.group_text);
             author = (TextView) v.findViewById(R.id.groupname);
-            img = (ImageView) v.findViewById(R.id.group_pic);
+            img = (NetworkImageView) v.findViewById(R.id.group_pic);
             card = (CardView) v.findViewById(R.id.group_card);
 
         }

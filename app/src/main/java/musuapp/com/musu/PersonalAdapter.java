@@ -20,13 +20,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
+import musuapp.com.musu.utils.Utils;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.*;
 
 import org.json.JSONArray;
@@ -55,8 +58,10 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
     private static Activity fragment;
     private FloatingActionButton cPost;
     private static String userToken;
+    private ImageLoader mImageLoader = AppController.getInstance().getImageLoader();
+    private static int userID;
 
-    public PersonalAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost)
+    public PersonalAdapter(Context context, RecyclerView recyclerView, Activity fragment, List<Post> posts, FloatingActionButton cPost, int userID)
     {
         SharedPreferences token = context.getSharedPreferences("Login", Context.MODE_PRIVATE);
         this.userToken = token.getString("token", "null");
@@ -65,6 +70,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         this.fragment = fragment;
         this.cPost = cPost;
         this.recyclerView = recyclerView;
+        this.userID = userID;
 
     }
     public void addPost(Post newPost)
@@ -83,12 +89,16 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
         contactViewHolder.postDetail.setText(post.getBodyText());
         contactViewHolder.author.setText(post.getUserName());
         contactViewHolder.like.setChecked(post.getIsLiked());
+        post.setUserID(PersonalAdapter.userID);
 
-        try {
-            Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
-        } catch (Exception e) {
-            Picasso.with(context).load(R.drawable.image_not_found).into(contactViewHolder.img);
-        }
+        contactViewHolder.img.setImageUrl(post.getImageURL(), mImageLoader);
+
+
+        //try {
+        //    Picasso.with(context).load(post.getImageURL()).into(contactViewHolder.img);
+        //} catch (Exception e) {
+        //    Picasso.with(context).load(R.drawable.image_not_found).into(contactViewHolder.img);
+        //}
 
         //This function displays the tags. when pass true also pass the len of how many tags you want to show plus the ellipse.
         Utils.addTags(fragment, contactViewHolder.tagArea, (ArrayList<String>)post.getTags(), 5, true);
@@ -99,12 +109,12 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
             public void onClick(View v) {
                 if(contactViewHolder.like.isChecked() == true){
                     // like button is now checked
-                    PersonalAdapter.LikeOrUnlikeImage(post, true);
+                    Utils.LikeOrUnlikeImage(post, PersonalAdapter.userToken, apiURL, PersonalAdapter.context, TAG, true);
                     // api call to like post for user
 
                 } else {
                     // like button is now unchecked
-                    PersonalAdapter.LikeOrUnlikeImage(post, false);
+                    Utils.LikeOrUnlikeImage(post, PersonalAdapter.userToken, apiURL, PersonalAdapter.context, TAG, false);
                     // api call to dislike post for user
 
                 }
@@ -120,6 +130,10 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
                 intent.putExtra("author", post.getUserName());
                 intent.putExtra("like", post.getIsLiked());
                 intent.putExtra("post_text", post.getBodyText());
+                intent.putExtra("userID", PersonalAdapter.userID);
+                intent.putExtra("postID", post.getPostID());
+                intent.putExtra("token", userToken);
+
                // Bitmap bit = ((BitmapDrawable)contactViewHolder.img.getDrawable()).getBitmap();
                 //ByteArrayOutputStream barray = new ByteArrayOutputStream();
                 //bit.compress(Bitmap.CompressFormat.PNG, 50, barray);
@@ -155,73 +169,6 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
     }
 
-
-    public static void LikeOrUnlikeImage(final Post post, boolean like)
-    {
-        String postID = Integer.toString(post.getPostID());
-        String userID = Integer.toString(post.getUserID());
-
-
-        // Build a map with the parameters I want to send to server
-        Map<String, String> postParam = new HashMap<String, String>();
-
-        if(like) postParam.put("function", "likePost");
-        else postParam.put("function", "unlikePost");
-
-        postParam.put("userID", userID);
-        postParam.put("postID", postID);
-        postParam.put("token", PersonalAdapter.userToken);
-
-        // JSON Object to send to the server
-        JSONObject parameters = new JSONObject(postParam);
-
-        // Building the actual request
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, apiURL, parameters,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // Logic goes here
-
-
-                        try{
-                            // Declare objects
-                            //List<Post> results = new ArrayList<Post>();
-
-                            // Get the JSON Array with the Posts
-                            boolean responseSuccess = (boolean)response.get("success");
-                            String responseText = (String)response.get("message");
-                            if(responseSuccess)
-                            {
-                                Toast toast = Toast.makeText(context,responseText, Toast.LENGTH_LONG);
-                                post.setLiked(responseText);
-                                toast.show();
-                            }
-
-                            // Create the adapter with the list
-                            //adapter = new MyAdapter(rv, getActivity(), results);
-
-
-                        } catch (JSONException e){
-                            Log.e(TAG, e.toString());
-                        }
-                    }
-
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Print VolleyLog to the console
-                VolleyLog.e(TAG, "Error: " + error.getMessage());
-            }
-        }); // !! The request building of "jsonObjReq" ends here !!
-
-        // Add the Request to the queue and execute
-        AppController.getInstance().addToRequestQueue(jsonObjReq, "json_obj_req");
-
-    }
-
-
     @Override
     public ContactViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View itemView = LayoutInflater.
@@ -235,7 +182,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
         protected TextView postDetail;
         protected TextView author;
-        protected ImageView img;
+        protected NetworkImageView img;
         protected CheckBox like;
         protected CardView card;
         protected RelativeLayout tagArea;
@@ -245,7 +192,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
             postDetail =  (TextView) v.findViewById(R.id.personal_text);
             author = (TextView) v.findViewById(R.id.user_name);
-            img = (ImageView) v.findViewById(R.id.personal_pic);
+            img =  (NetworkImageView) v.findViewById(R.id.personal_pic);
             like =  (CheckBox) v.findViewById(R.id.like);
             card = (CardView) v.findViewById(R.id.personal_card);
             tagArea = (RelativeLayout) v.findViewById(R.id.tag_area);

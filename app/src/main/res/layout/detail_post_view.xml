@@ -55,7 +55,7 @@
                 app:layout_constraintTop_toTopOf="@+id/detail_user" />
 
 
-            <ImageView
+            <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/detail_img"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

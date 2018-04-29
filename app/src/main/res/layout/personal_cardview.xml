@@ -39,7 +39,7 @@
             app:layout_constraintStart_toEndOf="@+id/user_pic"
             app:layout_constraintTop_toTopOf="@+id/user_pic" />
 
-        <ImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/personal_pic"
             android:layout_width="0dp"
             android:layout_height="190dp"

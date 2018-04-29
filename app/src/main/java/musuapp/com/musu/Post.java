@@ -22,6 +22,15 @@ public class Post {
     {
         // Empty call
     }
+    public Post(int userID, int postID)
+    {
+        this.userID = userID;
+        this.postID = postID;
+    }
+    public void setUserID(int userID)
+    {
+        this.userID = userID;
+    }
 
     public void setLiked(String responseText)
     {

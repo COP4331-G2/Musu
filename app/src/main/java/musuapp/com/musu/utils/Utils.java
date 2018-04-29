@@ -35,9 +35,10 @@ import musuapp.com.musu.R;
 
 public class Utils {
 
-
-    public static String LikeOrUnlikeImage(final Context context, final String TAG, String postID, String userID, String userToken, String apiURL, boolean like)
+    public static void LikeOrUnlikeImage(final Post post, String userToken, String apiURL, final Context context, final String TAG, boolean like)
     {
+        String postID = Integer.toString(post.getPostID());
+        String userID = Integer.toString(post.getUserID());
 
         final String[] returnResponse = {""};
         // Build a map with the parameters I want to send to server
@@ -69,11 +70,12 @@ public class Utils {
                             // Get the JSON Array with the Posts
                             boolean responseSuccess = (boolean)response.get("success");
                             final String responseText = (String)response.get("message");
+
+
                             if(responseSuccess)
                             {
                                 Toast toast = Toast.makeText(context,responseText, Toast.LENGTH_LONG);
-                                //post.setLiked(responseText);
-                                returnResponse[0] = (String) responseText;
+                                post.setLiked(responseText);
                                 toast.show();
                             }
 
@@ -98,7 +100,6 @@ public class Utils {
         // Add the Request to the queue and execute
         AppController.getInstance().addToRequestQueue(jsonObjReq, "json_obj_req");
 
-        return returnResponse[0];
 
     }
 
