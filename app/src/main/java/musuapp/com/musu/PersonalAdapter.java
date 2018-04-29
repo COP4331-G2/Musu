@@ -134,6 +134,8 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
                 //intent.putExtra("post_image", barray.toByteArray());
                 intent.putExtra("post_image", post.getImageURL());
                 intent.putStringArrayListExtra("post_tags", (ArrayList<String>) post.getTags());
+                //fragment.startActivity(intent);
+
                 fragment.startActivity(intent);
             }
         });
@@ -161,14 +163,6 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
     }
 
-    public ArrayAdapter showSomeTags(){
-
-        final List<TextView> personalTags = new ArrayList<>();
-
-        return null;
-    }
-
-
     @Override
     public ContactViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View itemView = LayoutInflater.
@@ -177,18 +171,7 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
             return new ContactViewHolder(itemView);
     }
-    /*public List TagStringArray(Post p){
-        List<String> tgs = new ArrayList<String>();
-        try{
-            for (int k = 0; k < p.getTags().length(); k++){
-                tgs.add(p.getTags().get(k).toString());
-            }
-        }catch (JSONException e){
-            Log.e("JSON Array", e.toString());
-        }
 
-        return tgs;
-    }*/
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView postDetail;

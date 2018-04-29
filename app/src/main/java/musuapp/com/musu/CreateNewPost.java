@@ -2,6 +2,7 @@ package musuapp.com.musu;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,11 +19,16 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -44,9 +50,12 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import musuapp.com.musu.utils.Utils;
 
 public class CreateNewPost extends AppCompatActivity {
 
@@ -65,6 +74,8 @@ public class CreateNewPost extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private ProgressBar suggest_loader;
     private View createNewPostView;
+    //int id;
+    private ArrayList<String> tagList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +92,129 @@ public class CreateNewPost extends AppCompatActivity {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Loading...");
         suggest_loader = findViewById(R.id.suggest_loader);
+        tagList = new ArrayList<String>();
+
+        tags.addTextChangedListener(commaPressed);
+    }
+
+    TextWatcher commaPressed = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+            String tp = s.toString();
+            if(s.length() > 0) {
+                if (tp.charAt(tp.length() - 1) == ',') {
+
+                    Log.w("TEXT CHANGED", tp.substring(0, tp.lastIndexOf(',')));
+                    tagList.add(tp.substring(0, tp.lastIndexOf(',')));
+                    createTags();
+                    s.clear();
+
+
+                }
+            }
+        }
+    };
+
+    public void createTags(){
+
+        int counter = 0;
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+
+        final RelativeLayout wrapper = (RelativeLayout) findViewById(R.id.create_tags);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        Log.i("WIDTH OF AREA:", String.valueOf(screenWidth));
+
+        //int id = 0;
+        wrapper.removeAllViews();
+
+        int currCounter = 0;
+        int currWidth = 0;
+        boolean isNewLine = false;
+        boolean firstLine = false;
+
+
+
+        for(int id = 0; id < tagList.size(); id++){
+
+            TextView tag = new TextView(this);
+            String text = tagList.get(id);
+            tag.setText(text.trim());
+
+
+
+            tag.setTextSize(16);
+            tag.setTextColor(getResources().getColor(R.color.black));
+            tag.setId(4000+id);
+            tag.setElevation(3);
+            tag.setBackgroundResource(R.drawable.tag_create);
+            tag.measure(0,0);
+            final int index = id;
+            tag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tagList.remove(index);
+                    createTags();
+                }
+            });
+
+            RelativeLayout.LayoutParams rlp1 = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            rlp1.setMargins(10, 10,10,20);
+
+            //tag.setMaxLines(1);
+
+            int width =  tag.getMeasuredWidth();//text.length()*15;
+
+            Log.i("WIDTH OF TAG", String.valueOf(width));
+
+                if ((currWidth + width + 100) <= screenWidth) {
+                    currWidth += width;
+                    isNewLine = false;
+                    currCounter++;
+                } else {
+                    currWidth = width;
+                    firstLine = false;
+                    isNewLine = true;
+                    currCounter = 1;
+                }
+
+                if (id == 0) {
+                    rlp1.addRule(RelativeLayout.ALIGN_START);
+                    tag.setLayoutParams(rlp1);
+                    wrapper.addView(tag);
+                } else if (isNewLine) {
+                    rlp1.addRule(RelativeLayout.ALIGN_LEFT);
+                    rlp1.addRule(RelativeLayout.BELOW, 4000 - 1 + id);
+                    tag.setLayoutParams(rlp1);
+                    wrapper.addView(tag);
+                } else if (firstLine) {
+                    rlp1.addRule(RelativeLayout.RIGHT_OF, 4000 - 1 + id);
+                    tag.setLayoutParams(rlp1);
+                    wrapper.addView(tag);
+
+                } else {
+
+                    rlp1.addRule(RelativeLayout.RIGHT_OF, 4000 - 1 + id);
+                    rlp1.addRule(RelativeLayout.BELOW, 4000 - currCounter + id);
+                    tag.setLayoutParams(rlp1);
+                    wrapper.addView(tag);
+
+                }
+            }
+
     }
 
     // Create a unique file name space for the image

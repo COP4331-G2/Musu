@@ -40,7 +40,7 @@ public class Utils {
         String postID = Integer.toString(post.getPostID());
         String userID = Integer.toString(post.getUserID());
 
-
+        final String[] returnResponse = {""};
         // Build a map with the parameters I want to send to server
         Map<String, String> postParam = new HashMap<String, String>();
 
@@ -69,7 +69,7 @@ public class Utils {
 
                             // Get the JSON Array with the Posts
                             boolean responseSuccess = (boolean)response.get("success");
-                            String responseText = (String)response.get("message");
+                            final String responseText = (String)response.get("message");
                             if(responseSuccess)
                             {
                                 Toast toast = Toast.makeText(context,responseText, Toast.LENGTH_LONG);
@@ -97,6 +97,7 @@ public class Utils {
 
         // Add the Request to the queue and execute
         AppController.getInstance().addToRequestQueue(jsonObjReq, "json_obj_req");
+
 
     }
 
