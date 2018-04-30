@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="primary">#E43F3F</color>
-  <color name="primary_dark">#e12929</color>
-  <color name="primary_darker">#CC1D1D</color>
+  <color name="primary">#58b1f6</color>
+  <color name="primary_dark">#38a8ff</color>
+  <color name="primary_darker">#0497f9</color>
   <color name="accent">#FFFFFF</color>
 
   <color name="black">#c8000000</color>
@@ -14,5 +14,8 @@
   <color name="base">#AAAAAA</color>
   <color name="iron">#cccccc</color>
   <color name="white">#ffffff</color>
-    <color name="detailBgdColor">#1e000000</color>
+  <color name="detailBgdColor">#1e000000</color>
+  <color name="splshbg">#60bdff</color>
+  <color name="lg_sp_bg">#272727</color>
+  <color name="heart">#f73232</color>
 </resources>

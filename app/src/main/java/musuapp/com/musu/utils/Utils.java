@@ -107,7 +107,7 @@ public class Utils {
 
         int counter = 0;
         int screenWidth = activity.getResources().getDisplayMetrics().widthPixels;
-        screenWidth -= isThisAprevious?200:0;
+        screenWidth -= isThisAprevious?200:50;
         //final RelativeLayout wrapper = (RelativeLayout) findViewById(R.id.detail_tags);
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -158,7 +158,7 @@ public class Utils {
 
             Log.i("WIDTH OF TAG", String.valueOf(width));
             if(tag.getText().length() > 0) {
-                if ((currWidth + width + 100) <= screenWidth) {
+                if ((currWidth + width + 150) <= screenWidth) {
                     currWidth += width;
                     isNewLine = false;
                     currCounter++;

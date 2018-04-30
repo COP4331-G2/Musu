@@ -131,7 +131,7 @@ public class CreateNewPost extends AppCompatActivity {
     public void createTags(){
 
         int counter = 0;
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int screenWidth = getResources().getDisplayMetrics().widthPixels - 50;
 
         final RelativeLayout wrapper = (RelativeLayout) findViewById(R.id.create_tags);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -183,7 +183,7 @@ public class CreateNewPost extends AppCompatActivity {
 
             Log.i("WIDTH OF TAG", String.valueOf(width));
 
-                if ((currWidth + width + 100) <= screenWidth) {
+                if ((currWidth + width + 150) <= screenWidth) {
                     currWidth += width;
                     isNewLine = false;
                     currCounter++;

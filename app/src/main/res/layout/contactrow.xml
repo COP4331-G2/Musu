@@ -49,18 +49,22 @@
             android:layout_marginTop="8dp"
             android:background="@color/iron"
             android:foregroundGravity="fill"
-            android:scaleType="fitXY" />
+            android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/group_text"
-            android:layout_width="wrap_content"
+            android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="11dp"
             android:layout_marginStart="11dp"
             android:layout_toEndOf="@+id/group_pic"
             android:layout_toRightOf="@+id/group_pic"
-            android:text="TextView" />
+            android:ellipsize="end"
+            android:lines="2"
+            android:text="TextView"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 

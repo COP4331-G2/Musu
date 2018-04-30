@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,6 +25,8 @@ public class SignUpActivity extends AppCompatActivity {
         context = super.getBaseContext();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         final TextView _firstname = findViewById(R.id.input_firstname);
         final TextView _lastname = findViewById(R.id.input_lastname);
         final TextView _username = findViewById(R.id.input_username);
@@ -103,6 +106,20 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            // this takes the user 'back', as if they pressed the left-facing triangle icon on the main android toolbar.
+            // if this doesn't work as desired, another possibility is to call `finish()` here.
+            this.onBackPressed();
+            //this.finish();
+            return true;
+
+        }
+        return super.onOptionsItemSelected(item);
 
     }
 }

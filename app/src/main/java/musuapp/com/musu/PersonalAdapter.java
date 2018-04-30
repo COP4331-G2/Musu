@@ -152,20 +152,45 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.Contac
 
                 fragment.findViewById(R.id.overlay_personal).setVisibility(View.VISIBLE);
                 ImageView imgOver = fragment.findViewById(R.id.imgOverlaypersonal);
-                //imgOver.setImageDrawable(contactViewHolder.img.getDrawable());
+                imgOver.setImageDrawable(contactViewHolder.img.getDrawable());
 
-                try {
+                /*try {
                     Picasso.with(context).load(post.getImageURL()).into(imgOver);
                 } catch (Exception e) {
                     Picasso.with(context).load(R.drawable.image_not_found).into(imgOver);
-                }
+                }*/
 
                 recyclerView.setLayoutFrozen(true);
                 cPost.setVisibility(View.GONE);
 
-                return false;
+                return true;
             }
         });
+
+        contactViewHolder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(fragment, DetailPostView.class);
+                intent.putExtra("author", post.getUserName());
+                intent.putExtra("like", post.getIsLiked());
+                intent.putExtra("post_text", post.getBodyText());
+                intent.putExtra("userID", PersonalAdapter.userID);
+                intent.putExtra("postID", post.getPostID());
+                intent.putExtra("token", userToken);
+
+                // Bitmap bit = ((BitmapDrawable)contactViewHolder.img.getDrawable()).getBitmap();
+                //ByteArrayOutputStream barray = new ByteArrayOutputStream();
+                //bit.compress(Bitmap.CompressFormat.PNG, 50, barray);
+                //intent.putExtra("post_image", barray.toByteArray());
+                intent.putExtra("post_image", post.getImageURL());
+                intent.putStringArrayListExtra("post_tags", (ArrayList<String>) post.getTags());
+                //fragment.startActivity(intent);
+
+                fragment.startActivity(intent);
+            }
+        });
+
 
     }
 

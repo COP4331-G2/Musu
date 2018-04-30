@@ -3,11 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!--   your app branding color for the app bar -->
-        <item name="colorPrimary">#3F51B5</item>
+        <item name="colorPrimary">#50a5ec</item>
         <!--   darker variant for the status bar and contextual app bars -->
-        <item name="colorPrimaryDark">#303F9F</item>
+        <item name="colorPrimaryDark">#379af5</item>
         <!--   theme UI controls like checkboxes and text fields -->
-        <item name="colorAccent">#FF4081</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
    <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
@@ -15,7 +15,23 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
 
-        <item name="android:windowBackground">@color/primary</item>
+
+
+        <item name="colorControlNormal">@color/iron</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="android:textColorHint">@color/iron</item>
+        <item name="android:textColor">@color/white</item>
+
+        <item name="colorButtonNormal">@color/primary_darker</item>
+        <item name="android:colorButtonNormal">@color/primary_darker</item>
+    </style>
+    <style name="AppTheme.Dark2" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+
+
 
         <item name="colorControlNormal">@color/iron</item>
         <item name="colorControlActivated">@color/white</item>
@@ -29,9 +45,9 @@
 
 <style name="AppTheme.Light" parent="Theme.AppCompat.Light">
     <!--   your app branding color for the app bar -->
-    <item name="colorPrimary">#3F51B5</item>
+    <item name="colorPrimary">#50a5ec</item>
     <!--   darker variant for the status bar and contextual app bars -->
-    <item name="colorPrimaryDark">#303F9F</item>
+    <item name="colorPrimaryDark">#379af5</item>
     <!--   theme UI controls like checkboxes and text fields -->
     <item name="colorAccent">#FF4081</item>
 
@@ -42,7 +58,25 @@
     <item name="colorControlNormal">@color/iron</item>
     <item name="colorControlActivated">@color/white</item>
     <item name="colorControlHighlight">@color/white</item>
-    <item name="android:textColorHint">@color/iron</item>
+    <item name="android:textColorHint">@color/white</item>
 </style>
+
+    <style name="AppTheme.Light2" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--   your app branding color for the app bar -->
+        <item name="colorPrimary">#50a5ec</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="colorPrimaryDark">#379af5</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="colorAccent">#FF4081</item>
+
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
+
+        <item name="colorControlNormal">@color/iron</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="android:textColorHint">@color/iron</item>
+    </style>
 
 </resources>
